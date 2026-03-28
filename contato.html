@@ -5,129 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doce Encanto - Contato & Feedback</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primaria: #ad1457; --secundaria: #f8bbd0; --marrom: #5d4037; --fundo: #fff5f8; --sucesso: #25d366; --insta: #e1306c; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); }
-        
-        header { background-color: var(--secundaria); padding: 25px; text-align: center; border-bottom: 3px solid var(--primaria); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        /* BOTÕES FIXOS */
-        .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; }
-        .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
+        :root { 
+            --primaria: #ad1457; 
+            --secundaria: #f8bbd0; 
+            --marrom: #4e342e; 
+            --fundo: #fff5f8; 
+            --sucesso: #25d366; 
+            --insta: #e1306c; 
+        }
 
-        /* GAVETAS */
-        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background-color: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); line-height: 1.6; }
+
+        /* --- HEADER PADRONIZADO --- */
+        header { background: white; padding: 30px 20px; text-align: center; border-bottom: 3px solid var(--secundaria); }
+        .logo-principal { font-family: 'Great Vibes', cursive; font-size: 4rem; color: var(--primaria); margin: 0; line-height: 1; }
+        .slogan { margin-top: 10px; font-weight: 700; color: var(--marrom); font-family: 'Montserrat', sans-serif; font-size: 0.85rem; letter-spacing: 2px; }
+
+        /* --- NAVEGAÇÃO --- */
+        .nav-btn { position: fixed; top: 15px; background: var(--primaria); color: white; padding: 10px 18px; border-radius: 20px; cursor: pointer; z-index: 100; font-weight: bold; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-menu { left: 15px; }
+        .btn-cart { right: 15px; border-radius: 50%; padding: 12px 15px; }
+        .badge { position: absolute; top: -5px; right: -5px; background: #ff9800; font-size: 10px; padding: 2px 6px; border-radius: 10px; border: 2px solid white; }
+
+        /* --- GAVETAS --- */
+        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; transition: 0.4s; overflow-x: hidden; box-shadow: 0 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .gaveta-esq { left: 0; } .gaveta-dir { right: 0; }
-        .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+        .gaveta-header { padding: 20px; background: var(--fundo); border-bottom: 1px solid #eee; font-weight: bold; }
+        .gaveta a { padding: 15px 25px; text-decoration: none; color: var(--marrom); display: block; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
 
-        .container { max-width: 650px; margin: 40px auto; padding: 0 20px 40px 20px; }
+        /* --- CONTEÚDO --- */
+        .container { max-width: 700px; margin: 30px auto; padding: 0 20px 60px 20px; }
         
-        /* CARDS */
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 30px; }
-        .item-contato { margin-bottom: 20px; }
-        .item-contato i { font-size: 28px; color: var(--primaria); margin-bottom: 10px; }
-
+        .card { background: white; padding: 35px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); text-align: center; margin-bottom: 30px; border: 1px solid rgba(173, 20, 87, 0.05); }
+        .card i.main-icon { font-size: 2.5rem; color: var(--primaria); margin-bottom: 15px; }
+        
         /* BOTÕES SOCIAIS */
-        .social-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px; }
-        .btn-social { text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 50px; color: white; font-weight: bold; transition: 0.3s; font-size: 14px; }
-        .btn-social:hover { transform: scale(1.05); opacity: 0.9; }
+        .social-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+        .btn-social { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; padding: 14px 25px; border-radius: 50px; color: white; font-weight: bold; transition: 0.3s; }
+        .btn-social:hover { transform: translateY(-3px); filter: brightness(1.1); }
         .bg-whats { background: var(--sucesso); }
         .bg-insta { background: var(--insta); }
 
         /* FORMULÁRIO */
-        .form-group { text-align: left; margin-bottom: 15px; }
-        .form-group label { font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px; color: var(--marrom); }
-        .campo { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 10px; font-family: inherit; font-size: 15px; transition: 0.3s; box-sizing: border-box; }
-        .campo:focus { border-color: var(--secundaria); outline: none; background: #fffdfd; }
+        .form-group { text-align: left; margin-bottom: 20px; }
+        .form-group label { font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 8px; color: var(--marrom); text-transform: uppercase; letter-spacing: 1px; }
+        .campo { width: 100%; padding: 14px; border: 2px solid #f7f7f7; border-radius: 12px; font-family: inherit; font-size: 1rem; background: #fafafa; transition: 0.3s; box-sizing: border-box; }
+        .campo:focus { border-color: var(--secundaria); outline: none; background: white; box-shadow: 0 0 10px rgba(173, 20, 87, 0.05); }
         
-        .btn-principal { background: var(--primaria); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn-whats-outline { background: transparent; color: var(--sucesso); border: 2px solid var(--sucesso); margin-top: 8px; }
+        .btn-acao { background: var(--primaria); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(173, 20, 87, 0.2); }
+        .btn-acao:disabled { background: #ccc; cursor: not-allowed; }
 
         .text-destaque { color: var(--primaria); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="btn-menu" onclick="toggleG('idGaveta', '250px')">☰ Menu</div>
+<button class="nav-btn btn-menu" onclick="toggleG('idGaveta', '280px')">☰ MENU</button>
+<button class="nav-btn btn-cart" onclick="toggleG('idCarrinho', '320px')">
+    <i class="fas fa-shopping-basket"></i>
+    <span class="badge" id="contagem">0</span>
+</button>
+
 <div id="idGaveta" class="gaveta gaveta-esq">
-    <div style="padding: 20px; background: var(--secundaria); color: var(--primaria);"><h3 style="margin:0">Doce Encanto</h3></div>
+    <div class="gaveta-header">Navegação</div>
     <a href="index.html">🏠 Sobre</a>
     <a href="unidades.html">🍬 Setor Doces</a>
     <a href="kits.html">🎁 Kits de Doces</a>
     <a href="contato.html">📞 Contato</a>
     <a href="logistica.html">📦 Gestão</a>
-    <div style="padding: 20px;"><button class="btn-principal" onclick="toggleG('idGaveta', '0')">Fechar Menu</button></div>
+    <div style="padding: 20px; margin-top: auto;">
+        <button class="btn-acao" onclick="toggleG('idGaveta', '0')">Fechar</button>
+    </div>
 </div>
 
-<div class="cart-icon" onclick="toggleG('idCarrinho', '320px')">
-    <i class="fas fa-shopping-basket"></i>
-    <span class="cart-count" id="contagem">0</span>
-</div>
 <div id="idCarrinho" class="gaveta gaveta-dir">
-    <div style="padding: 20px;">
-        <span onclick="toggleG('idCarrinho', '0')" style="cursor:pointer; font-size: 25px; float: right;">&times;</span>
-        <h2>Meu Pedido</h2>
-        <div id="lista-itens" style="margin-top:20px;">Carrinho vazio...</div>
-        <hr>
-        <h3 id="total-carrinho">Total: R$ 0,00</h3>
-        <button class="btn-principal" style="background:var(--sucesso)" onclick="finalizar()">Finalizar (UniCV)</button>
-        <button class="btn-principal btn-whats-outline" onclick="finalizarFora()">Finalizar (WhatsApp)</button>
+    <div class="gaveta-header">
+        Meu Pedido
+        <span onclick="toggleG('idCarrinho', '0')" style="float: right; cursor: pointer;">&times;</span>
+    </div>
+    <div id="lista-itens" style="padding: 20px; flex-grow: 1;">Carrinho vazio...</div>
+    <div style="padding: 20px; border-top: 1px solid #eee;">
+        <h3 id="total-carrinho" style="margin-bottom: 15px;">Total: R$ 0,00</h3>
+        <p style="font-size: 0.7rem; color: var(--primaria); margin-bottom: 10px;">* Pagamento via PIX Antecipado.</p>
+        <button class="btn-acao" style="background:var(--sucesso)" onclick="finalizar()">Finalizar Pedido</button>
     </div>
 </div>
 
 <header>
-    <h1>Doce Encanto</h1>
-    <p>Dúvidas, pedidos ou sugestões? Estamos aqui!</p>
+    <h1 class="logo-principal">Doce Encanto</h1>
+    <div class="slogan">ADOÇANDO SUAS NOITES NA UNICV!</div>
 </header>
 
 <div class="container">
     
     <div class="card">
-        <div class="item-contato">
-            <i class="fas fa-comments"></i>
-            <h3>Nossas Redes Sociais</h3>
-            <p>Acompanhe as novidades e fale conosco!</p>
-            
-            <div class="social-grid">
-                <a href="https://wa.me/5544998392373?text=Olá!%20Vim%20pelo%20site%20Doce%20Encanto." class="btn-social bg-whats" target="_blank">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </a>
-
-                <a href="https://www.instagram.com/doce_encanto_unicv?igsh=MzI3Y2hoOWZucjUw" class="btn-social bg-insta" target="_blank">
-                    <i class="fab fa-instagram"></i> Instagram
-                </a>
-            </div>
+        <i class="fas fa-paper-plane main-icon"></i>
+        <h3>Fale com a Gente</h3>
+        <p>Dúvidas sobre o pedido ou quer ver os doces do dia? <br>Nos chame nas redes oficiais!</p>
+        
+        <div class="social-grid">
+            <a href="https://wa.me/5544998392373" class="btn-social bg-whats" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://www.instagram.com/doce_encanto_unicv" class="btn-social bg-insta" target="_blank">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
         </div>
-        <div class="item-contato" style="margin-top: 25px;">
-            <i class="fas fa-map-marker-alt"></i>
-            <h3>Onde nos encontrar?</h3>
-            <p><strong>UniCV - Sala 9D</strong> (Noturno)<br>Engenharia de Software B</p>
+
+        <div style="margin-top: 30px; border-top: 1px solid #f5f5f5; padding-top: 20px;">
+            <p><i class="fas fa-map-marker-alt" style="color: var(--primaria)"></i> <strong>Onde estamos:</strong> Sala 9D (Engenharia B) - Noturno</p>
         </div>
     </div>
 
-    <div class="card" style="border-top: 5px solid var(--primaria);">
-        <i class="fas fa-magic" style="font-size: 30px; color: var(--primaria); margin-bottom: 15px;"></i>
+    <div class="card">
+        <i class="fas fa-star main-icon" style="color: #ffb300;"></i>
         <h2>Espaço do Cliente</h2>
-        <p>Use este canal para <span class="text-destaque">elogios, melhorias ou reclamações</span>. Sua opinião é o ingrediente principal do sucesso da Doce Encanto!</p>
+        <p>Sua opinião é o nosso ingrediente principal. <br>Deixe seu <span class="text-destaque">elogio, sugestão ou reclamação</span>.</p>
         
         <div style="margin-top: 25px;">
             <div class="form-group">
-                <label>Seu Nome Completo:</label>
-                <input type="text" id="fb-nome" class="campo" placeholder="Ex: João Silva">
+                <label>Seu Nome:</label>
+                <input type="text" id="fb-nome" class="campo" placeholder="Como quer ser chamado?">
             </div>
 
             <div class="form-group">
-                <label>Turma UniCV ou Origem:</label>
-                <input type="text" id="fb-origem" class="campo" placeholder="Ex: ESW B / Visitante">
+                <label>Sua Turma / Origem:</label>
+                <input type="text" id="fb-origem" class="campo" placeholder="Ex: Engenharia 2A / Visitante">
             </div>
 
             <div class="form-group">
-                <label>Sua Mensagem:</label>
-                <textarea id="fb-mensagem" class="campo" rows="4" placeholder="O que podemos melhorar no site ou no atendimento? Deixe sua nota!" style="resize: none;"></textarea>
+                <label>Mensagem:</label>
+                <textarea id="fb-mensagem" class="campo" rows="4" placeholder="Conte para nós sua experiência..." style="resize: none;"></textarea>
             </div>
 
-            <button class="btn-principal" onclick="enviarFeedback()" id="btn-feedback">
+            <button class="btn-acao" onclick="enviarFeedback()" id="btn-feedback">
                 Enviar Feedback à Equipe
             </button>
         </div>
@@ -148,15 +162,15 @@
         const lista = document.getElementById('lista-itens');
         let t = 0;
         if (carrinho.length === 0) {
-            lista.innerHTML = '<p style="text-align:center">Carrinho vazio...</p>';
+            lista.innerHTML = '<p style="text-align:center; color:#999;">Carrinho vazio...</p>';
         } else {
             lista.innerHTML = '';
             carrinho.forEach((item, index) => {
                 let v = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
                 t += isNaN(v) ? 0 : v;
-                lista.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom: 5px;">
-                    <div style="text-align:left"><span>${item.nome}</span><br><small>R$ ${item.preco}</small></div>
-                    <i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i>
+                lista.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:#f9f9f9; padding:10px; border-radius:8px;">
+                    <div style="text-align:left"><span style="font-weight:bold">${item.nome}</span><br><small>R$ ${item.preco}</small></div>
+                    <i class="fas fa-trash-alt" onclick="remover(${index})" style="color:red; cursor:pointer;"></i>
                 </div>`;
             });
         }
@@ -170,23 +184,29 @@
     }
 
     async function finalizar() {
-        if(carrinho.length === 0) return alert("Carrinho vazio!");
-        const id = gerarID(); const n = prompt("Nome:"); const l = prompt("Local:");
+        if(carrinho.length === 0) return alert("Adicione itens antes de finalizar!");
+        const n = prompt("Seu Nome:");
+        const l = prompt("Local de Retirada (Sala/Bloco):");
         if(!n || !l) return;
+        
+        const id = gerarID();
         try {
             await fetch(`${urlAPI}?sheet=pedidos`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ data: [{ "status":"Pendente", "id_pedido":id, "cliente":n, "local":l, "itens":carrinho.map(i=>i.nome).join(" + "), "valor": document.getElementById('total-carrinho').innerText.replace('Total: R$ ',''), "data_compra": new Date().toLocaleString() }]})
+                body: JSON.stringify({ data: [{ 
+                    "status":"Pendente", 
+                    "id_pedido":id, 
+                    "cliente":n, 
+                    "local":l, 
+                    "itens":carrinho.map(i=>i.nome).join(" + "), 
+                    "valor": document.getElementById('total-carrinho').innerText.replace('Total: R$ ',''), 
+                    "data_compra": new Date().toLocaleString() 
+                }]})
             });
-            alert("Pedido Enviado! ID: " + id);
-            window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido Doce Encanto ${id} - ${n}`;
+            alert("Pedido Enviado! ID: " + id + ". Vamos te chamar no WhatsApp.");
+            window.location.href = `https://wa.me/${WHATSAPP}?text=Oi! Pedido ${id} de ${n}. Itens: ${carrinho.map(i=>i.nome).join(", ")}`;
             carrinho = []; localStorage.removeItem('carrinhoDoceEncanto'); atualizarC();
-        } catch (e) { alert("Erro ao processar pedido."); }
-    }
-
-    function finalizarFora() {
-        if(carrinho.length === 0) return alert("Carrinho vazio!");
-        window.location.href = `https://wa.me/${WHATSAPP}?text=Olá Doce Encanto! Gostaria de encomendar: ${carrinho.map(i=>i.nome).join(", ")}`;
+        } catch (e) { alert("Erro ao processar. Tente novamente."); }
     }
 
     async function enviarFeedback() {
@@ -195,10 +215,10 @@
         const msg = document.getElementById('fb-mensagem').value;
         const btn = document.getElementById('btn-feedback');
 
-        if(!nome || !origem || !msg) return alert("Por favor, preencha todos os campos!");
+        if(!nome || !origem || !msg) return alert("Por favor, preencha o feedback completo!");
 
         btn.disabled = true;
-        btn.innerText = "Enviando...";
+        btn.innerText = "Enviando carinho...";
 
         try {
             await fetch(`${urlAPI}?sheet=feedbacks`, {
@@ -211,12 +231,12 @@
                     "data": new Date().toLocaleString('pt-BR')
                 }]})
             });
-            alert("✨ Feedback enviado com sucesso!");
+            alert("✨ Recebemos seu feedback! Muito obrigado.");
             document.getElementById('fb-nome').value = "";
             document.getElementById('fb-origem').value = "";
             document.getElementById('fb-mensagem').value = "";
         } catch (e) {
-            alert("Erro ao enviar feedback.");
+            alert("Ops! Erro ao enviar. Tente novamente mais tarde.");
         } finally {
             btn.disabled = false;
             btn.innerText = "Enviar Feedback à Equipe";
