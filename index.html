@@ -3,197 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doce Encanto - Sobre</title>
+    <title>Doce Encanto - Informações Importantes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primaria: #ad1457; --secundaria: #f8bbd0; --marrom: #5d4037; --fundo: #fff5f8; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); }
-        
-        header { background-color: var(--secundaria); padding: 25px; text-align: center; border-bottom: 3px solid var(--primaria); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        /* BOTÕES FIXOS */
-        .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; }
-        .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
+        :root { 
+            --primaria: #ad1457; 
+            --secundaria: #f8bbd0; 
+            --marrom: #4e342e; 
+            --fundo: #fff5f8;
+            --pix: #32bcad;
+            --alerta: #d32f2f;
+            --info: #0288d1;
+        }
 
-        /* GAVETAS */
-        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background-color: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
-        .gaveta-esq { left: 0; }
-        .gaveta-dir { right: 0; }
-        .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); line-height: 1.6; }
 
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
-        .secao-sobre { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); line-height: 1.6; }
-        .secao-sobre h2 { color: var(--primaria); text-align: center; margin-bottom: 20px; }
-        .secao-sobre h3 { color: var(--primaria); margin-top: 25px; border-bottom: 2px solid var(--secundaria); display: inline-block; }
+        /* --- HEADER --- */
+        header { background: white; padding: 30px 20px; text-align: center; border-bottom: 3px solid var(--secundaria); }
+        .logo-principal { font-family: 'Great Vibes', cursive; font-size: 4rem; color: var(--primaria); margin: 0; line-height: 1; }
+        .slogan { margin-top: 10px; font-weight: 700; color: var(--marrom); font-family: 'Montserrat', sans-serif; font-size: 0.85rem; letter-spacing: 2px; }
+
+        /* --- NAVEGAÇÃO --- */
+        .nav-btn { position: fixed; top: 15px; background: var(--primaria); color: white; padding: 10px 18px; border-radius: 20px; cursor: pointer; z-index: 100; font-weight: bold; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-menu { left: 15px; }
+        .btn-cart { right: 15px; border-radius: 50%; padding: 12px 15px; }
+        .badge { position: absolute; top: -5px; right: -5px; background: #ff9800; font-size: 10px; padding: 2px 6px; border-radius: 10px; border: 2px solid white; }
+
+        /* --- GAVETAS --- */
+        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; transition: 0.4s; overflow-x: hidden; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .gaveta-esq { left: 0; } .gaveta-dir { right: 0; }
+        .gaveta a { padding: 15px 25px; text-decoration: none; color: var(--marrom); display: block; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
+
+        /* --- CONTEÚDO --- */
+        .container { max-width: 700px; margin: 30px auto; padding: 0 20px; padding-bottom: 60px; }
+        .secao-info { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
         
-        .aviso-temporario { background-color: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 0 10px 10px 0; }
-        .aviso-externo { background-color: #e8f5e9; border-left: 5px solid #4caf50; padding: 15px; margin: 15px 0; border-radius: 8px; }
-        .aviso-demanda { background-color: #fce4ec; border-left: 5px solid var(--primaria); padding: 15px; margin: 20px 0; border-radius: 8px; }
+        .titulo-secao { color: var(--primaria); border-bottom: 2px solid var(--fundo); padding-bottom: 8px; margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 1.3rem; }
+
+        /* BLOCOS DE STATUS E REGRAS */
+        .regra-pagamento { background: #e0f2f1; border-left: 6px solid var(--pix); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .bloco-atencao-cartao { background: #e1f5fe; border-left: 6px solid var(--info); padding: 15px; border-radius: 8px; margin: 15px 0; color: #01579b; font-size: 0.95rem; }
+        .regra-cancelamento { background: #fdf2f2; border: 2px solid var(--alerta); padding: 20px; border-radius: 12px; margin: 20px 0; }
         
-        .destaque { color: var(--primaria); font-weight: bold; }
-        .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .btn-whats { background: transparent; color: #25d366; border: 2px solid #25d366; margin-top: 8px; }
-        
-        ul { padding-left: 20px; }
-        li { margin-bottom: 10px; }
+        .importante { color: var(--alerta); font-weight: bold; text-transform: uppercase; }
+
+        .lista-detalhes { list-style: none; padding: 0; }
+        .lista-detalhes li { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 12px; }
+        .lista-detalhes i { color: var(--primaria); margin-top: 4px; }
     </style>
 </head>
 <body>
 
-<div class="btn-menu" onclick="toggleG('idGaveta', '250px')">☰ Menu</div>
-<div id="idGaveta" class="gaveta gaveta-esq">
-    <div style="padding: 20px; background: var(--secundaria); color: var(--primaria);"><h3 style="margin:0">Doce Encanto</h3></div>
-    <a href="index.html">🏠 Sobre</a>
-    <a href="unidades.html">🍬 Setor Doces</a>
-    <a href="kits.html">🎁 Kits de Doces</a>
-    <a href="contato.html">📞 Contato</a>
-    <a href="logistica.html">📦 Gestão</a>
-    <div style="padding: 20px;"><button class="btn-principal" onclick="toggleG('idGaveta', '0')">Fechar Menu</button></div>
+<button class="nav-btn btn-menu" onclick="toggle('menu', '280px')">☰</button>
+<button class="nav-btn btn-cart" onclick="toggle('cart', '320px')">
+    <i class="fas fa-shopping-basket"></i>
+    <span class="badge" id="cont">0</span>
+</button>
+
+<div id="menu" class="gaveta gaveta-esq">
+    <div style="padding:20px; background:var(--fundo)"><strong>Doce Encanto</strong></div>
+    <a href="index.html">Sobre</a>
+    <a href="unidades.html">Cardápio</a>
+    <a href="kits.html">Kits</a>
+    <a href="logistica.html">Gestão</a>
 </div>
 
-<div class="cart-icon" onclick="toggleG('idCarrinho', '320px')">
-    <i class="fas fa-shopping-basket"></i>
-    <span class="cart-count" id="contagem">0</span>
-</div>
-<div id="idCarrinho" class="gaveta gaveta-dir">
-    <div style="padding: 20px;">
-        <span onclick="toggleG('idCarrinho', '0')" style="cursor:pointer; font-size: 25px; float: right;">&times;</span>
-        <h2>Meu Pedido</h2>
-        <div id="lista-itens" style="margin-top: 20px;">Carrinho vazio...</div>
-        <hr>
-        <h3 id="total-carrinho">Total: R$ 0,00</h3>
-        
-        <button class="btn-principal" style="background:#25d366" onclick="fluxoFinalizar()">Finalizar Pedido</button>
-        
-        <p style="font-size: 10px; color: #666; text-align: center; margin-top: 10px;">
-            *Escolha entre buscar na sala ou combinar entrega via WhatsApp.
-        </p>
+<div id="cart" class="gaveta gaveta-dir">
+    <div style="padding:20px; border-bottom:1px solid #eee;"><strong>Pedido Atual</strong><span onclick="toggle('cart', '0')" style="float:right; cursor:pointer">✕</span></div>
+    <div id="itens-lista" style="padding:20px;">Carrinho vazio...</div>
+    <div style="padding:20px; border-top:1px solid #eee;">
+        <h3 id="total">Total: R$ 0,00</h3>
+        <button onclick="finalizarPedido()" style="width:100%; padding:15px; background:#25d366; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">ENVIAR PEDIDO</button>
     </div>
 </div>
 
 <header>
-    <h1>Doce Encanto</h1>
-    <p>Adoçando suas noites na UniCV!</p>
+    <h1 class="logo-principal">Doce Encanto</h1>
+    <div class="slogan">ADOÇANDO SUAS NOITES NA UNICV!</div>
 </header>
 
 <div class="container">
-    <div class="secao-sobre">
-        <h2>✨ A Nossa História</h2>
-        <p>A <strong>Doce Encanto</strong> nasceu da união de estudantes de Engenharia de Software da <strong>UniCV</strong>, com o objetivo de transformar as noites acadêmicas em momentos muito mais doces e produtivos.</p>
-        
-        <div class="aviso-temporario">
-            <i class="fas fa-clock"></i> <strong>Operação Noturna:</strong> 
-            Atendemos de segunda a sexta, focado especialmente no intervalo e início das aulas da UniCV.
-        </div>
+    <div class="secao-info">
+        <h2 class="titulo-secao">Sobre Nós</h2>
+        <p>A <strong>Doce Encanto</strong> foi criada por estudantes de <strong>Engenharia de Software</strong> da <strong>UniCV</strong> para oferecer doces de qualidade durante o intervalo e saída das aulas noturnas.</p>
 
-        <h3>🚀 Como funciona a Entrega?</h3>
-        <ul>
-            <li><span class="destaque">Retirada:</span> Você pode buscar seu pedido diretamente na <strong>Sala 9D</strong> (Engenharia de Software B).</li>
-            <li><span class="destaque">Entrega:</span> Podemos combinar a entrega via WhatsApp para sua comodidade.</li>
-            <li><span class="destaque">Pagamento:</span> Pix ou dinheiro no ato da entrega/retirada.</li>
+        <h2 class="titulo-secao">Informações de Atendimento</h2>
+        <ul class="lista-detalhes">
+            <li><i class="fas fa-map-marker-alt"></i> <span><strong>Localização:</strong> Sala 9D (Bloco de Engenharia de Software B).</span></li>
+            <li><i class="fas fa-clock"></i> <span><strong>Horário:</strong> Segunda a sexta, período noturno da UniCV.</span></li>
+            <li><i class="fas fa-truck"></i> <span><strong>Logística:</strong> Entregas combinadas diretamente nos blocos via WhatsApp.</span></li>
         </ul>
 
-        <div class="aviso-externo">
-            <i class="fab fa-whatsapp"></i> <strong>Dúvidas?</strong><br>
-            Fale conosco via WhatsApp para combinarmos a melhor forma de você receber seu Doce Encanto!
+        <div class="regra-pagamento">
+            <h3 style="margin-top:0; color:var(--pix)"><i class="fas fa-qrcode"></i> PAGAMENTO ANTECIPADO</h3>
+            <p style="margin:0;">O pedido só será validado mediante a <strong>confirmação do pagamento via PIX</strong>. Favor enviar o comprovante no WhatsApp.</p>
         </div>
 
-        <h3>👩‍🍳 Qualidade Artesanal</h3>
-        <p>Nossos doces seguem rigorosos padrões de higiene e o carinho de uma produção artesanal.</p>
-        
-        <p style="text-align: center; margin-top: 30px; font-style: italic; color: var(--primaria); font-weight: bold;">
-            "Engenharia de Software no código, Doce Encanto no paladar."
-        </p>
+        <div class="bloco-atencao-cartao">
+            <i class="fas fa-info-circle"></i> <strong>Aviso:</strong> Estamos analisando a viabilidade técnica para adicionar a forma de pagamento via <strong>cartão</strong> em breve. Fiquem ligados!
+        </div>
+
+        <div class="regra-cancelamento">
+            <h3 style="margin-top:0; color:var(--alerta)"><i class="fas fa-ban"></i> REGRAS DE CANCELAMENTO</h3>
+            <p style="margin:0;"><span class="importante">Atenção:</span> O cancelamento do pedido só é permitido de forma <strong>antecipada</strong>. Não realizamos estorno para pedidos já preparados ou em rota de entrega.</p>
+        </div>
     </div>
 </div>
 
 <script>
-    let carrinho = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
-    const urlAPI = "https://sheetdb.io/api/v1/ti9a03weq125d";
-    const WHATSAPP = "5544998392373"; 
-
-    function toggleG(id, s) { document.getElementById(id).style.width = s; }
-
-    function atualizarC() {
-        document.getElementById('contagem').innerText = carrinho.length;
-        const lista = document.getElementById('lista-itens');
-        let total = 0;
-        if (carrinho.length === 0) {
-            lista.innerHTML = '<p style="text-align:center">Carrinho vazio...</p>';
-        } else {
-            lista.innerHTML = '';
-            carrinho.forEach((item, index) => {
-                let v = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
-                total += isNaN(v) ? 0 : v;
-                lista.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span>${item.nome}</span><i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i></div>`;
+    let pedido = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
+    function toggle(id, size) { document.getElementById(id).style.width = size; }
+    function atualizarInterface() {
+        const lista = document.getElementById('itens-lista');
+        const cont = document.getElementById('cont');
+        const totalTxt = document.getElementById('total');
+        cont.innerText = pedido.length;
+        let totalSoma = 0;
+        if(pedido.length === 0) { lista.innerHTML = 'Carrinho vazio...'; } 
+        else {
+            lista.innerHTML = "";
+            pedido.forEach((item, index) => {
+                totalSoma += item.preco;
+                lista.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${item.nome}</span><i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i></div>`;
             });
         }
-        document.getElementById('total-carrinho').innerText = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+        totalTxt.innerText = `Total: R$ ${totalSoma.toFixed(2).replace('.', ',')}`;
     }
-
     function remover(index) {
-        carrinho.splice(index, 1);
-        localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho));
-        atualizarC();
+        pedido.splice(index, 1);
+        localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(pedido));
+        atualizarInterface();
     }
-
-    function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
-
-    async function fluxoFinalizar() {
-        if(carrinho.length === 0) return alert("Carrinho vazio!");
-        
-        const nome = prompt("Seu nome:");
-        if(!nome) return;
-
-        const opcao = prompt("Como deseja receber seu pedido?\nDigite 1 para: BUSCAR NA SALA 9D\nDigite 2 para: COMBINAR ENTREGA VIA WHATSAPP");
-
-        let localFinal = "";
-        let msgWhats = "";
-
-        if (opcao === "1") {
-            localFinal = "Retirada na Sala 9D";
-            msgWhats = "Vou buscar na Sala 9D.";
-        } else if (opcao === "2") {
-            const tel = prompt("Informe seu WhatsApp para combinarmos a entrega:");
-            if(!tel) return alert("Número necessário para combinar a entrega!");
-            localFinal = "A combinar (Whats: " + tel + ")";
-            msgWhats = "Quero combinar a entrega. Meu contato: " + tel;
-        } else {
-            return alert("Opção inválida. Tente novamente.");
-        }
-
-        const pedidoID = gerarID();
-        const total = document.getElementById('total-carrinho').innerText;
-
-        try {
-            await fetch(`${urlAPI}?sheet=pedidos`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [{
-                    "status": "Pendente",
-                    "id_pedido": pedidoID,
-                    "cliente": nome,
-                    "local": localFinal,
-                    "itens": carrinho.map(i => i.nome).join(" + "),
-                    "valor": total.replace('Total: R$ ', ''),
-                    "data_compra": new Date().toLocaleString()
-                }]})
-            });
-            
-            alert("✅ Pedido Registrado! ID: " + pedidoID);
-            let linkWhats = `https://wa.me/${WHATSAPP}?text=Oi! Pedido Doce Encanto *${pedidoID}*.\nNome: ${nome}\nItens: ${carrinho.map(i => i.nome).join(", ")}\n*Opção:* ${msgWhats}`;
-            
-            window.location.href = linkWhats;
-            carrinho = []; 
-            localStorage.removeItem('carrinhoDoceEncanto'); 
-            atualizarC();
-        } catch (e) { 
-            alert("Erro ao enviar para a planilha. Mas você pode finalizar pelo WhatsApp!"); 
-        }
+    function finalizarPedido() {
+        if(pedido.length === 0) return alert("Seu carrinho está vazio!");
+        let mensagem = "Olá! Gostaria de fazer um pedido:%0A" + 
+                        pedido.map(p => "- " + p.nome).join("%0A") + 
+                        "%0A%0AEstou ciente das regras de pagamento e cancelamento.";
+        window.open(`https://wa.me/5544999999999?text=${mensagem}`);
     }
-
-    atualizarC();
+    atualizarInterface();
 </script>
+
 </body>
 </html>
