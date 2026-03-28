@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doce Encanto - Kits</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primaria: #ad1457; --secundaria: #f8bbd0; --marrom: #5d4037; --fundo: #fff5f8; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--fundo); color: var(--marrom); }
+        header { background: var(--secundaria); padding: 25px; text-align: center; border-bottom: 3px solid var(--primaria); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; }
+        .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+        .vitrine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+        .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+        .gaveta-dir { right: 0; } .gaveta-esq { left: 0; }
+        .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+        .modal { display: none; position: fixed; z-index: 300; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; position: relative; }
+    </style>
+</head>
+<body>
+
+<div class="btn-menu" onclick="toggleG('gavMenu', '250px')">☰ Menu</div>
+<div id="gavMenu" class="gaveta gaveta-esq">
+    <div style="padding: 20px; background: var(--secundaria); color: var(--primaria);"><h3 style="margin:0">Doce Encanto</h3></div>
+    <a href="index.html">🏠 Sobre</a>
+    <a href="unidades.html">🍬 Setor Doces</a>
+    <a href="kits.html">🎁 Kits de Doces</a>
+    <a href="contato.html">📞 Contato</a> 
+    <a href="logistica.html">📦 Gestão</a>
+    <div style="padding: 20px;"><button class="btn-principal" onclick="toggleG('gavMenu', '0')">Fechar Menu</button></div>
+</div>
+
+<div class="cart-icon" onclick="toggleG('gavCart', '320px')">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-count" id="contagem">0</span>
+</div>
+<div id="gavCart" class="gaveta gaveta-dir">
+    <div style="padding: 20px;">
+        <span onclick="toggleG('gavCart', '0')" style="cursor:pointer; font-size: 25px; float: right;">&times;</span>
+        <h2>Meu Pedido</h2>
+        <div id="lista-itens" style="margin-top:20px;">Carrinho vazio...</div>
+        <hr>
+        <h3 id="total-carrinho">Total: R$ 0,00</h3>
+        <button class="btn-principal" style="background:#25d366" onclick="fluxoFinalizar()">Finalizar Pedido</button>
+    </div>
+</div>
+
+<header>
+    <h1>Doce Encanto - Kits</h1>
+    <p>Escolha o seu combo favorito!</p>
+</header>
+
+<div class="container">
+    <div id="vitrine" class="vitrine-grid">Carregando produtos...</div>
+</div>
+
+<div id="modalKit" class="modal">
+    <div class="modal-content">
+        <img id="m-img" style="width:100%; border-radius:10px;">
+        <h2 id="m-nome"></h2>
+        <p id="m-desc"></p>
+        <h3 id="m-preco" style="color:var(--primaria)"></h3>
+        <button class="btn-principal" id="btn-confirmar">Adicionar ao Carrinho</button>
+        <p onclick="fecharM()" style="cursor:pointer; margin-top:15px; color:#666;">Cancelar</p>
+    </div>
+</div>
+
+<script>
+    let carrinho = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
+    const apiID = "ti9a03weq125d";
+    const WHATSAPP = "5544998392373"; 
+
+    function toggleG(id, tam) { document.getElementById(id).style.width = tam; }
+    function fecharM() { document.getElementById('modalKit').style.display = 'none'; }
+    function salvar() { localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho)); }
+    function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
+
+    // FUNÇÃO PARA TRATAR O CAMINHO DA IMAGEM (LINK OU PASTA)
+    function tratarCaminhoImagem(valor) {
+        if (!valor || valor === "" || valor === "default.jpg") return "https://via.placeholder.com/300x200?text=Doce+Encanto";
+        let v = valor.trim();
+        if (v.toLowerCase().startsWith('http')) {
+            return v; // Usa o link direto da internet
+        }
+        return "imagens/" + v; // Busca na pasta local
+    }
+
+    async function carregar() {
+        const vitrine = document.getElementById('vitrine');
+        try {
+            const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=Kits`);
+            const dados = await resposta.json();
+            vitrine.innerHTML = '';
+            dados.forEach(item => {
+                const nome = item.Kits || item.kits || item.Nome || item.A;
+                const preco = item.Preco || item.preco || item.B || "0.00";
+                const desc = item.Descricao || item.C || "";
+                const rawImg = item.Imagen || item.Imagem || item.D || "";
+                
+                const urlImagem = tratarCaminhoImagem(rawImg);
+                
+                if (!nome || nome === "Kits") return;
+                vitrine.innerHTML += `
+                    <div class="card">
+                        <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Doce+Encanto'">
+                        <h3>${nome}</h3>
+                        <p style="font-weight:bold; color:var(--primaria)">R$ ${preco}</p>
+                        <button class="btn-principal" onclick="abrirModal('${nome}', '${preco}', '${desc}', '${urlImagem}')">Ver Detalhes</button>
+                    </div>`;
+            });
+            atualizarIcone();
+        } catch (erro) { vitrine.innerHTML = "Erro ao carregar os dados."; }
+    }
+
+    function abrirModal(n, p, d, urlFinal) {
+        document.getElementById('m-nome').innerText = n;
+        document.getElementById('m-preco').innerText = "R$ " + p;
+        document.getElementById('m-desc').innerText = d;
+        document.getElementById('m-img').src = urlFinal;
+        document.getElementById('modalKit').style.display = 'flex';
+        document.getElementById('btn-confirmar').onclick = function() {
+            carrinho.push({ nome: n, preco: p });
+            salvar(); atualizarIcone(); fecharM(); toggleG('gavCart', '320px');
+        };
+    }
+
+    function atualizarIcone() {
+        document.getElementById('contagem').innerText = carrinho.length;
+        renderizarCarrinho();
+    }
+
+    function renderizarCarrinho() {
+        const lista = document.getElementById('lista-itens');
+        let soma = 0;
+        lista.innerHTML = '';
+        if (carrinho.length === 0) {
+            lista.innerHTML = '<p style="text-align:center">Carrinho vazio...</p>';
+        } else {
+            carrinho.forEach((item, index) => {
+                let pLimpo = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
+                soma += isNaN(pLimpo) ? 0 : pLimpo;
+                lista.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                        <div style="text-align:left"><span>${item.nome}</span><br><small>R$ ${item.preco}</small></div>
+                        <i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i>
+                    </div>`;
+            });
+        }
+        document.getElementById('total-carrinho').innerText = "Total: R$ " + soma.toFixed(2).replace('.', ',');
+    }
+
+    function remover(i) { carrinho.splice(i, 1); salvar(); atualizarIcone(); }
+
+    async function fluxoFinalizar() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
+        const pedidoID = gerarID();
+        const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
+
+        try {
+            await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ data: [{
+                    "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli,
+                    "itens": carrinho.map(i => i.nome).join(" + "), "valor": totalStr,
+                    "data_compra": new Date().toLocaleString('pt-BR')
+                }]})
+            });
+            alert("✅ Pedido Registrado! ID: " + pedidoID);
+            window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido Kit ${pedidoID}\nNome: ${nomeCli}`;
+            carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
+        } catch (e) { alert("Erro ao processar pedido."); }
+    }
+
+    carregar();
+</script>
+</body>
+</html>

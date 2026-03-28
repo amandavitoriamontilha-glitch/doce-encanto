@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doce Encanto - Sobre</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primaria: #ad1457; --secundaria: #f8bbd0; --marrom: #5d4037; --fundo: #fff5f8; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); }
+        
+        header { background-color: var(--secundaria); padding: 25px; text-align: center; border-bottom: 3px solid var(--primaria); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* BOTÕES FIXOS */
+        .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; }
+        .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
+
+        /* GAVETAS */
+        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background-color: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+        .gaveta-esq { left: 0; }
+        .gaveta-dir { right: 0; }
+        .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .secao-sobre { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); line-height: 1.6; }
+        .secao-sobre h2 { color: var(--primaria); text-align: center; margin-bottom: 20px; }
+        .secao-sobre h3 { color: var(--primaria); margin-top: 25px; border-bottom: 2px solid var(--secundaria); display: inline-block; }
+        
+        .aviso-temporario { background-color: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 0 10px 10px 0; }
+        .aviso-externo { background-color: #e8f5e9; border-left: 5px solid #4caf50; padding: 15px; margin: 15px 0; border-radius: 8px; }
+        .aviso-demanda { background-color: #fce4ec; border-left: 5px solid var(--primaria); padding: 15px; margin: 20px 0; border-radius: 8px; }
+        
+        .destaque { color: var(--primaria); font-weight: bold; }
+        .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-whats { background: transparent; color: #25d366; border: 2px solid #25d366; margin-top: 8px; }
+        
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="btn-menu" onclick="toggleG('idGaveta', '250px')">☰ Menu</div>
+<div id="idGaveta" class="gaveta gaveta-esq">
+    <div style="padding: 20px; background: var(--secundaria); color: var(--primaria);"><h3 style="margin:0">Doce Encanto</h3></div>
+    <a href="index.html">🏠 Sobre</a>
+    <a href="unidades.html">🍬 Setor Doces</a>
+    <a href="kits.html">🎁 Kits de Doces</a>
+    <a href="contato.html">📞 Contato</a>
+    <a href="logistica.html">📦 Gestão</a>
+    <div style="padding: 20px;"><button class="btn-principal" onclick="toggleG('idGaveta', '0')">Fechar Menu</button></div>
+</div>
+
+<div class="cart-icon" onclick="toggleG('idCarrinho', '320px')">
+    <i class="fas fa-shopping-basket"></i>
+    <span class="cart-count" id="contagem">0</span>
+</div>
+<div id="idCarrinho" class="gaveta gaveta-dir">
+    <div style="padding: 20px;">
+        <span onclick="toggleG('idCarrinho', '0')" style="cursor:pointer; font-size: 25px; float: right;">&times;</span>
+        <h2>Meu Pedido</h2>
+        <div id="lista-itens" style="margin-top: 20px;">Carrinho vazio...</div>
+        <hr>
+        <h3 id="total-carrinho">Total: R$ 0,00</h3>
+        
+        <button class="btn-principal" style="background:#25d366" onclick="fluxoFinalizar()">Finalizar Pedido</button>
+        
+        <p style="font-size: 10px; color: #666; text-align: center; margin-top: 10px;">
+            *Escolha entre buscar na sala ou combinar entrega via WhatsApp.
+        </p>
+    </div>
+</div>
+
+<header>
+    <h1>Doce Encanto</h1>
+    <p>Adoçando suas noites na UniCV!</p>
+</header>
+
+<div class="container">
+    <div class="secao-sobre">
+        <h2>✨ A Nossa História</h2>
+        <p>A <strong>Doce Encanto</strong> nasceu da união de estudantes de Engenharia de Software da <strong>UniCV</strong>, com o objetivo de transformar as noites acadêmicas em momentos muito mais doces e produtivos.</p>
+        
+        <div class="aviso-temporario">
+            <i class="fas fa-clock"></i> <strong>Operação Noturna:</strong> 
+            Atendemos de segunda a sexta, focado especialmente no intervalo e início das aulas da UniCV.
+        </div>
+
+        <h3>🚀 Como funciona a Entrega?</h3>
+        <ul>
+            <li><span class="destaque">Retirada:</span> Você pode buscar seu pedido diretamente na <strong>Sala 9D</strong> (Engenharia de Software B).</li>
+            <li><span class="destaque">Entrega:</span> Podemos combinar a entrega via WhatsApp para sua comodidade.</li>
+            <li><span class="destaque">Pagamento:</span> Pix ou dinheiro no ato da entrega/retirada.</li>
+        </ul>
+
+        <div class="aviso-externo">
+            <i class="fab fa-whatsapp"></i> <strong>Dúvidas?</strong><br>
+            Fale conosco via WhatsApp para combinarmos a melhor forma de você receber seu Doce Encanto!
+        </div>
+
+        <h3>👩‍🍳 Qualidade Artesanal</h3>
+        <p>Nossos doces seguem rigorosos padrões de higiene e o carinho de uma produção artesanal.</p>
+        
+        <p style="text-align: center; margin-top: 30px; font-style: italic; color: var(--primaria); font-weight: bold;">
+            "Engenharia de Software no código, Doce Encanto no paladar."
+        </p>
+    </div>
+</div>
+
+<script>
+    let carrinho = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
+    const urlAPI = "https://sheetdb.io/api/v1/ti9a03weq125d";
+    const WHATSAPP = "5544998392373"; 
+
+    function toggleG(id, s) { document.getElementById(id).style.width = s; }
+
+    function atualizarC() {
+        document.getElementById('contagem').innerText = carrinho.length;
+        const lista = document.getElementById('lista-itens');
+        let total = 0;
+        if (carrinho.length === 0) {
+            lista.innerHTML = '<p style="text-align:center">Carrinho vazio...</p>';
+        } else {
+            lista.innerHTML = '';
+            carrinho.forEach((item, index) => {
+                let v = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
+                total += isNaN(v) ? 0 : v;
+                lista.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span>${item.nome}</span><i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i></div>`;
+            });
+        }
+        document.getElementById('total-carrinho').innerText = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+    }
+
+    function remover(index) {
+        carrinho.splice(index, 1);
+        localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho));
+        atualizarC();
+    }
+
+    function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
+
+    async function fluxoFinalizar() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        
+        const nome = prompt("Seu nome:");
+        if(!nome) return;
+
+        const opcao = prompt("Como deseja receber seu pedido?\nDigite 1 para: BUSCAR NA SALA 9D\nDigite 2 para: COMBINAR ENTREGA VIA WHATSAPP");
+
+        let localFinal = "";
+        let msgWhats = "";
+
+        if (opcao === "1") {
+            localFinal = "Retirada na Sala 9D";
+            msgWhats = "Vou buscar na Sala 9D.";
+        } else if (opcao === "2") {
+            const tel = prompt("Informe seu WhatsApp para combinarmos a entrega:");
+            if(!tel) return alert("Número necessário para combinar a entrega!");
+            localFinal = "A combinar (Whats: " + tel + ")";
+            msgWhats = "Quero combinar a entrega. Meu contato: " + tel;
+        } else {
+            return alert("Opção inválida. Tente novamente.");
+        }
+
+        const pedidoID = gerarID();
+        const total = document.getElementById('total-carrinho').innerText;
+
+        try {
+            await fetch(`${urlAPI}?sheet=pedidos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: [{
+                    "status": "Pendente",
+                    "id_pedido": pedidoID,
+                    "cliente": nome,
+                    "local": localFinal,
+                    "itens": carrinho.map(i => i.nome).join(" + "),
+                    "valor": total.replace('Total: R$ ', ''),
+                    "data_compra": new Date().toLocaleString()
+                }]})
+            });
+            
+            alert("✅ Pedido Registrado! ID: " + pedidoID);
+            let linkWhats = `https://wa.me/${WHATSAPP}?text=Oi! Pedido Doce Encanto *${pedidoID}*.\nNome: ${nome}\nItens: ${carrinho.map(i => i.nome).join(", ")}\n*Opção:* ${msgWhats}`;
+            
+            window.location.href = linkWhats;
+            carrinho = []; 
+            localStorage.removeItem('carrinhoDoceEncanto'); 
+            atualizarC();
+        } catch (e) { 
+            alert("Erro ao enviar para a planilha. Mas você pode finalizar pelo WhatsApp!"); 
+        }
+    }
+
+    atualizarC();
+</script>
+</body>
+</html>

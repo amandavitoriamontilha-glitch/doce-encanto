@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doce Encanto - Contato & Feedback</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primaria: #ad1457; --secundaria: #f8bbd0; --marrom: #5d4037; --fundo: #fff5f8; --sucesso: #25d366; --insta: #e1306c; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); }
+        
+        header { background-color: var(--secundaria); padding: 25px; text-align: center; border-bottom: 3px solid var(--primaria); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* BOTÕES FIXOS */
+        .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; }
+        .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
+
+        /* GAVETAS */
+        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background-color: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+        .gaveta-esq { left: 0; } .gaveta-dir { right: 0; }
+        .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+
+        .container { max-width: 650px; margin: 40px auto; padding: 0 20px 40px 20px; }
+        
+        /* CARDS */
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 30px; }
+        .item-contato { margin-bottom: 20px; }
+        .item-contato i { font-size: 28px; color: var(--primaria); margin-bottom: 10px; }
+
+        /* BOTÕES SOCIAIS */
+        .social-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px; }
+        .btn-social { text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 50px; color: white; font-weight: bold; transition: 0.3s; font-size: 14px; }
+        .btn-social:hover { transform: scale(1.05); opacity: 0.9; }
+        .bg-whats { background: var(--sucesso); }
+        .bg-insta { background: var(--insta); }
+
+        /* FORMULÁRIO */
+        .form-group { text-align: left; margin-bottom: 15px; }
+        .form-group label { font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px; color: var(--marrom); }
+        .campo { width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 10px; font-family: inherit; font-size: 15px; transition: 0.3s; box-sizing: border-box; }
+        .campo:focus { border-color: var(--secundaria); outline: none; background: #fffdfd; }
+        
+        .btn-principal { background: var(--primaria); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s; }
+        .btn-whats-outline { background: transparent; color: var(--sucesso); border: 2px solid var(--sucesso); margin-top: 8px; }
+
+        .text-destaque { color: var(--primaria); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="btn-menu" onclick="toggleG('idGaveta', '250px')">☰ Menu</div>
+<div id="idGaveta" class="gaveta gaveta-esq">
+    <div style="padding: 20px; background: var(--secundaria); color: var(--primaria);"><h3 style="margin:0">Doce Encanto</h3></div>
+    <a href="index.html">🏠 Sobre</a>
+    <a href="unidades.html">🍬 Setor Doces</a>
+    <a href="kits.html">🎁 Kits de Doces</a>
+    <a href="contato.html">📞 Contato</a>
+    <a href="logistica.html">📦 Gestão</a>
+    <div style="padding: 20px;"><button class="btn-principal" onclick="toggleG('idGaveta', '0')">Fechar Menu</button></div>
+</div>
+
+<div class="cart-icon" onclick="toggleG('idCarrinho', '320px')">
+    <i class="fas fa-shopping-basket"></i>
+    <span class="cart-count" id="contagem">0</span>
+</div>
+<div id="idCarrinho" class="gaveta gaveta-dir">
+    <div style="padding: 20px;">
+        <span onclick="toggleG('idCarrinho', '0')" style="cursor:pointer; font-size: 25px; float: right;">&times;</span>
+        <h2>Meu Pedido</h2>
+        <div id="lista-itens" style="margin-top:20px;">Carrinho vazio...</div>
+        <hr>
+        <h3 id="total-carrinho">Total: R$ 0,00</h3>
+        <button class="btn-principal" style="background:var(--sucesso)" onclick="finalizar()">Finalizar (UniCV)</button>
+        <button class="btn-principal btn-whats-outline" onclick="finalizarFora()">Finalizar (WhatsApp)</button>
+    </div>
+</div>
+
+<header>
+    <h1>Doce Encanto</h1>
+    <p>Dúvidas, pedidos ou sugestões? Estamos aqui!</p>
+</header>
+
+<div class="container">
+    
+    <div class="card">
+        <div class="item-contato">
+            <i class="fas fa-comments"></i>
+            <h3>Nossas Redes Sociais</h3>
+            <p>Acompanhe as novidades e fale conosco!</p>
+            
+            <div class="social-grid">
+                <a href="https://wa.me/5544998392373?text=Olá!%20Vim%20pelo%20site%20Doce%20Encanto." class="btn-social bg-whats" target="_blank">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+
+                <a href="https://www.instagram.com/doce_encanto_unicv?igsh=MzI3Y2hoOWZucjUw" class="btn-social bg-insta" target="_blank">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            </div>
+        </div>
+        <div class="item-contato" style="margin-top: 25px;">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Onde nos encontrar?</h3>
+            <p><strong>UniCV - Sala 9D</strong> (Noturno)<br>Engenharia de Software B</p>
+        </div>
+    </div>
+
+    <div class="card" style="border-top: 5px solid var(--primaria);">
+        <i class="fas fa-magic" style="font-size: 30px; color: var(--primaria); margin-bottom: 15px;"></i>
+        <h2>Espaço do Cliente</h2>
+        <p>Use este canal para <span class="text-destaque">elogios, melhorias ou reclamações</span>. Sua opinião é o ingrediente principal do sucesso da Doce Encanto!</p>
+        
+        <div style="margin-top: 25px;">
+            <div class="form-group">
+                <label>Seu Nome Completo:</label>
+                <input type="text" id="fb-nome" class="campo" placeholder="Ex: João Silva">
+            </div>
+
+            <div class="form-group">
+                <label>Turma UniCV ou Origem:</label>
+                <input type="text" id="fb-origem" class="campo" placeholder="Ex: ESW B / Visitante">
+            </div>
+
+            <div class="form-group">
+                <label>Sua Mensagem:</label>
+                <textarea id="fb-mensagem" class="campo" rows="4" placeholder="O que podemos melhorar no site ou no atendimento? Deixe sua nota!" style="resize: none;"></textarea>
+            </div>
+
+            <button class="btn-principal" onclick="enviarFeedback()" id="btn-feedback">
+                Enviar Feedback à Equipe
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let carrinho = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
+    const urlAPI = "https://sheetdb.io/api/v1/ti9a03weq125d";
+    const WHATSAPP = "5544998392373";
+
+    function toggleG(id, s) { document.getElementById(id).style.width = s; }
+    function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
+
+    function atualizarC() {
+        document.getElementById('contagem').innerText = carrinho.length;
+        const lista = document.getElementById('lista-itens');
+        let t = 0;
+        if (carrinho.length === 0) {
+            lista.innerHTML = '<p style="text-align:center">Carrinho vazio...</p>';
+        } else {
+            lista.innerHTML = '';
+            carrinho.forEach((item, index) => {
+                let v = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
+                t += isNaN(v) ? 0 : v;
+                lista.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom: 5px;">
+                    <div style="text-align:left"><span>${item.nome}</span><br><small>R$ ${item.preco}</small></div>
+                    <i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i>
+                </div>`;
+            });
+        }
+        document.getElementById('total-carrinho').innerText = `Total: R$ ${t.toFixed(2).replace('.', ',')}`;
+    }
+
+    function remover(index) {
+        carrinho.splice(index, 1);
+        localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho));
+        atualizarC();
+    }
+
+    async function finalizar() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        const id = gerarID(); const n = prompt("Nome:"); const l = prompt("Local:");
+        if(!n || !l) return;
+        try {
+            await fetch(`${urlAPI}?sheet=pedidos`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ data: [{ "status":"Pendente", "id_pedido":id, "cliente":n, "local":l, "itens":carrinho.map(i=>i.nome).join(" + "), "valor": document.getElementById('total-carrinho').innerText.replace('Total: R$ ',''), "data_compra": new Date().toLocaleString() }]})
+            });
+            alert("Pedido Enviado! ID: " + id);
+            window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido Doce Encanto ${id} - ${n}`;
+            carrinho = []; localStorage.removeItem('carrinhoDoceEncanto'); atualizarC();
+        } catch (e) { alert("Erro ao processar pedido."); }
+    }
+
+    function finalizarFora() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        window.location.href = `https://wa.me/${WHATSAPP}?text=Olá Doce Encanto! Gostaria de encomendar: ${carrinho.map(i=>i.nome).join(", ")}`;
+    }
+
+    async function enviarFeedback() {
+        const nome = document.getElementById('fb-nome').value;
+        const origem = document.getElementById('fb-origem').value;
+        const msg = document.getElementById('fb-mensagem').value;
+        const btn = document.getElementById('btn-feedback');
+
+        if(!nome || !origem || !msg) return alert("Por favor, preencha todos os campos!");
+
+        btn.disabled = true;
+        btn.innerText = "Enviando...";
+
+        try {
+            await fetch(`${urlAPI}?sheet=feedbacks`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: [{
+                    "nome_completo": nome,
+                    "origem_turma": origem,
+                    "feedback": msg,
+                    "data": new Date().toLocaleString('pt-BR')
+                }]})
+            });
+            alert("✨ Feedback enviado com sucesso!");
+            document.getElementById('fb-nome').value = "";
+            document.getElementById('fb-origem').value = "";
+            document.getElementById('fb-mensagem').value = "";
+        } catch (e) {
+            alert("Erro ao enviar feedback.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Enviar Feedback à Equipe";
+        }
+    }
+
+    atualizarC();
+</script>
+</body>
+</html>
