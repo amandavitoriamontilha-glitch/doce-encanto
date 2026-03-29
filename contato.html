@@ -20,12 +20,18 @@
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); line-height: 1.6; }
 
         /* --- HEADER PADRONIZADO --- */
-        header { background: white; padding: 30px 20px; text-align: center; border-bottom: 3px solid var(--secundaria); }
+        header { 
+            background: var(--secundaria); 
+            padding: 35px 20px; 
+            text-align: center; 
+            border-bottom: 4px solid var(--primaria); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
         .logo-principal { font-family: 'Great Vibes', cursive; font-size: 4rem; color: var(--primaria); margin: 0; line-height: 1; }
-        .slogan { margin-top: 10px; font-weight: 700; color: var(--marrom); font-family: 'Montserrat', sans-serif; font-size: 0.85rem; letter-spacing: 2px; }
+        .slogan { margin-top: 10px; font-weight: 700; color: var(--marrom); font-family: 'Montserrat', sans-serif; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
 
         /* --- NAVEGAÇÃO --- */
-        .nav-btn { position: fixed; top: 15px; background: var(--primaria); color: white; padding: 10px 18px; border-radius: 20px; cursor: pointer; z-index: 100; font-weight: bold; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .nav-btn { position: fixed; top: 15px; background: var(--primaria); color: white; padding: 10px 18px; border-radius: 20px; cursor: pointer; z-index: 100; font-weight: bold; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .btn-menu { left: 15px; }
         .btn-cart { right: 15px; border-radius: 50%; padding: 12px 15px; }
         .badge { position: absolute; top: -5px; right: -5px; background: #ff9800; font-size: 10px; padding: 2px 6px; border-radius: 10px; border: 2px solid white; }
@@ -33,53 +39,49 @@
         /* --- GAVETAS --- */
         .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; transition: 0.4s; overflow-x: hidden; box-shadow: 0 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .gaveta-esq { left: 0; } .gaveta-dir { right: 0; }
-        .gaveta-header { padding: 20px; background: var(--fundo); border-bottom: 1px solid #eee; font-weight: bold; }
-        .gaveta a { padding: 15px 25px; text-decoration: none; color: var(--marrom); display: block; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
+        .gaveta-header { padding: 20px; background: var(--secundaria); color: var(--primaria); font-weight: bold; border-bottom: 1px solid #eee; }
+        .gaveta a { padding: 15px 25px; text-decoration: none; color: var(--primaria); display: block; border-bottom: 1px solid #f0f0f0; font-weight: bold; }
+
+        /* BOTÃO PADRÃO DO CÓDIGO DE KITS */
+        .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
 
         /* --- CONTEÚDO --- */
         .container { max-width: 700px; margin: 30px auto; padding: 0 20px 60px 20px; }
-        
         .card { background: white; padding: 35px; border-radius: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); text-align: center; margin-bottom: 30px; border: 1px solid rgba(173, 20, 87, 0.05); }
         .card i.main-icon { font-size: 2.5rem; color: var(--primaria); margin-bottom: 15px; }
         
-        /* BOTÕES SOCIAIS */
         .social-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
         .btn-social { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; padding: 14px 25px; border-radius: 50px; color: white; font-weight: bold; transition: 0.3s; }
-        .btn-social:hover { transform: translateY(-3px); filter: brightness(1.1); }
         .bg-whats { background: var(--sucesso); }
         .bg-insta { background: var(--insta); }
 
-        /* FORMULÁRIO */
         .form-group { text-align: left; margin-bottom: 20px; }
         .form-group label { font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 8px; color: var(--marrom); text-transform: uppercase; letter-spacing: 1px; }
         .campo { width: 100%; padding: 14px; border: 2px solid #f7f7f7; border-radius: 12px; font-family: inherit; font-size: 1rem; background: #fafafa; transition: 0.3s; box-sizing: border-box; }
-        .campo:focus { border-color: var(--secundaria); outline: none; background: white; box-shadow: 0 0 10px rgba(173, 20, 87, 0.05); }
-        
         .btn-acao { background: var(--primaria); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(173, 20, 87, 0.2); }
         .btn-acao:disabled { background: #ccc; cursor: not-allowed; }
-
         .text-destaque { color: var(--primaria); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <button class="nav-btn btn-menu" onclick="toggleG('idGaveta', '280px')">☰ MENU</button>
-<button class="nav-btn btn-cart" onclick="toggleG('idCarrinho', '320px')">
-    <i class="fas fa-shopping-basket"></i>
-    <span class="badge" id="contagem">0</span>
-</button>
-
 <div id="idGaveta" class="gaveta gaveta-esq">
-    <div class="gaveta-header">Navegação</div>
+    <div class="gaveta-header">Doce Encanto</div>
     <a href="index.html">🏠 Sobre</a>
     <a href="unidades.html">🍬 Setor Doces</a>
     <a href="kits.html">🎁 Kits de Doces</a>
     <a href="contato.html">📞 Contato</a>
     <a href="logistica.html">📦 Gestão</a>
-    <div style="padding: 20px; margin-top: auto;">
-        <button class="btn-acao" onclick="toggleG('idGaveta', '0')">Fechar</button>
+    <div style="padding: 20px;">
+        <button class="btn-principal" onclick="toggleG('idGaveta', '0')">Fechar Menu</button>
     </div>
 </div>
+
+<button class="nav-btn btn-cart" onclick="toggleG('idCarrinho', '320px')">
+    <i class="fas fa-shopping-basket"></i>
+    <span class="badge" id="contagem">0</span>
+</button>
 
 <div id="idCarrinho" class="gaveta gaveta-dir">
     <div class="gaveta-header">
@@ -100,12 +102,10 @@
 </header>
 
 <div class="container">
-    
     <div class="card">
         <i class="fas fa-paper-plane main-icon"></i>
         <h3>Fale com a Gente</h3>
         <p>Dúvidas sobre o pedido ou quer ver os doces do dia? <br>Nos chame nas redes oficiais!</p>
-        
         <div class="social-grid">
             <a href="https://wa.me/5544998392373" class="btn-social bg-whats" target="_blank">
                 <i class="fab fa-whatsapp"></i> WhatsApp
@@ -114,7 +114,6 @@
                 <i class="fab fa-instagram"></i> Instagram
             </a>
         </div>
-
         <div style="margin-top: 30px; border-top: 1px solid #f5f5f5; padding-top: 20px;">
             <p><i class="fas fa-map-marker-alt" style="color: var(--primaria)"></i> <strong>Onde estamos:</strong> Sala 9D (Engenharia B) - Noturno</p>
         </div>
@@ -124,29 +123,22 @@
         <i class="fas fa-star main-icon" style="color: #ffb300;"></i>
         <h2>Espaço do Cliente</h2>
         <p>Sua opinião é o nosso ingrediente principal. <br>Deixe seu <span class="text-destaque">elogio, sugestão ou reclamação</span>.</p>
-        
         <div style="margin-top: 25px;">
             <div class="form-group">
                 <label>Seu Nome:</label>
                 <input type="text" id="fb-nome" class="campo" placeholder="Como quer ser chamado?">
             </div>
-
             <div class="form-group">
                 <label>Sua Turma / Origem:</label>
                 <input type="text" id="fb-origem" class="campo" placeholder="Ex: Engenharia 2A / Visitante">
             </div>
-
             <div class="form-group">
                 <label>Mensagem:</label>
                 <textarea id="fb-mensagem" class="campo" rows="4" placeholder="Conte para nós sua experiência..." style="resize: none;"></textarea>
             </div>
-
-            <button class="btn-acao" onclick="enviarFeedback()" id="btn-feedback">
-                Enviar Feedback à Equipe
-            </button>
+            <button class="btn-acao" onclick="enviarFeedback()" id="btn-feedback">Enviar Feedback à Equipe</button>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -194,19 +186,16 @@
             await fetch(`${urlAPI}?sheet=pedidos`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ data: [{ 
-                    "status":"Pendente", 
-                    "id_pedido":id, 
-                    "cliente":n, 
-                    "local":l, 
+                    "status":"Pendente", "id_pedido":id, "cliente":n, "local":l, 
                     "itens":carrinho.map(i=>i.nome).join(" + "), 
                     "valor": document.getElementById('total-carrinho').innerText.replace('Total: R$ ',''), 
                     "data_compra": new Date().toLocaleString() 
                 }]})
             });
-            alert("Pedido Enviado! ID: " + id + ". Vamos te chamar no WhatsApp.");
+            alert("Pedido Enviado! ID: " + id);
             window.location.href = `https://wa.me/${WHATSAPP}?text=Oi! Pedido ${id} de ${n}. Itens: ${carrinho.map(i=>i.nome).join(", ")}`;
             carrinho = []; localStorage.removeItem('carrinhoDoceEncanto'); atualizarC();
-        } catch (e) { alert("Erro ao processar. Tente novamente."); }
+        } catch (e) { alert("Erro ao processar."); }
     }
 
     async function enviarFeedback() {
@@ -214,35 +203,17 @@
         const origem = document.getElementById('fb-origem').value;
         const msg = document.getElementById('fb-mensagem').value;
         const btn = document.getElementById('btn-feedback');
-
         if(!nome || !origem || !msg) return alert("Por favor, preencha o feedback completo!");
-
-        btn.disabled = true;
-        btn.innerText = "Enviando carinho...";
-
+        btn.disabled = true; btn.innerText = "Enviando carinho...";
         try {
             await fetch(`${urlAPI}?sheet=feedbacks`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [{
-                    "nome_completo": nome,
-                    "origem_turma": origem,
-                    "feedback": msg,
-                    "data": new Date().toLocaleString('pt-BR')
-                }]})
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: [{ "nome_completo": nome, "origem_turma": origem, "feedback": msg, "data": new Date().toLocaleString('pt-BR') }]})
             });
-            alert("✨ Recebemos seu feedback! Muito obrigado.");
-            document.getElementById('fb-nome').value = "";
-            document.getElementById('fb-origem').value = "";
-            document.getElementById('fb-mensagem').value = "";
-        } catch (e) {
-            alert("Ops! Erro ao enviar. Tente novamente mais tarde.");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "Enviar Feedback à Equipe";
-        }
+            alert("✨ Recebemos seu feedback!");
+            document.getElementById('fb-nome').value = ""; document.getElementById('fb-origem').value = ""; document.getElementById('fb-mensagem').value = "";
+        } catch (e) { alert("Erro ao enviar."); } finally { btn.disabled = false; btn.innerText = "Enviar Feedback à Equipe"; }
     }
-
     atualizarC();
 </script>
 </body>
