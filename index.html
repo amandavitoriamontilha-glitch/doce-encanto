@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doce Encanto - Informações Importantes</title>
+    <title>Doce Encanto - Kits</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -11,71 +11,85 @@
         :root { 
             --primaria: #ad1457; 
             --secundaria: #f8bbd0; 
-            --marrom: #4e342e; 
-            --fundo: #fff5f8;
+            --marrom: #5d4037; 
+            --fundo: #fff5f8; 
             --pix: #32bcad;
             --alerta: #d32f2f;
             --info: #0288d1;
         }
-
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); line-height: 1.6; }
-
-        /* --- HEADER --- */
-        header { background: white; padding: 30px 20px; text-align: center; border-bottom: 3px solid var(--secundaria); }
-        .logo-principal { font-family: 'Great Vibes', cursive; font-size: 4rem; color: var(--primaria); margin: 0; line-height: 1; }
-        .slogan { margin-top: 10px; font-weight: 700; color: var(--marrom); font-family: 'Montserrat', sans-serif; font-size: 0.85rem; letter-spacing: 2px; }
-
-        /* --- NAVEGAÇÃO --- */
-        .nav-btn { position: fixed; top: 15px; background: var(--primaria); color: white; padding: 10px 18px; border-radius: 20px; cursor: pointer; z-index: 100; font-weight: bold; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-menu { left: 15px; }
-        .btn-cart { right: 15px; border-radius: 50%; padding: 12px 15px; }
-        .badge { position: absolute; top: -5px; right: -5px; background: #ff9800; font-size: 10px; padding: 2px 6px; border-radius: 10px; border: 2px solid white; }
-
-        /* --- GAVETAS --- */
-        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; transition: 0.4s; overflow-x: hidden; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-        .gaveta-esq { left: 0; } .gaveta-dir { right: 0; }
-        .gaveta a { padding: 15px 25px; text-decoration: none; color: var(--marrom); display: block; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
-
-        /* --- CONTEÚDO --- */
-        .container { max-width: 700px; margin: 30px auto; padding: 0 20px; padding-bottom: 60px; }
-        .secao-info { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--fundo); color: var(--marrom); line-height: 1.6; }
         
+        /* HEADER ROSA */
+        header { 
+            background: var(--secundaria); 
+            padding: 30px 20px; 
+            text-align: center; 
+            border-bottom: 4px solid var(--primaria); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        .logo-principal { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--primaria); margin: 0; line-height: 1; }
+        .slogan { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; color: var(--marrom); text-transform: uppercase; margin-top: 10px; }
+
+        /* NAVEGAÇÃO */
+        .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; border: none; }
+        .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; border: none; }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
+        
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; padding-bottom: 60px; }
+        
+        /* BLOCOS DE TEXTO RECUPERADOS */
+        .secao-info { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .titulo-secao { color: var(--primaria); border-bottom: 2px solid var(--fundo); padding-bottom: 8px; margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 1.3rem; }
-
-        /* BLOCOS DE STATUS E REGRAS */
-        .regra-pagamento { background: #e0f2f1; border-left: 6px solid var(--pix); padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .bloco-atencao-cartao { background: #e1f5fe; border-left: 6px solid var(--info); padding: 15px; border-radius: 8px; margin: 15px 0; color: #01579b; font-size: 0.95rem; }
-        .regra-cancelamento { background: #fdf2f2; border: 2px solid var(--alerta); padding: 20px; border-radius: 12px; margin: 20px 0; }
         
+        .regra-pagamento { background: #e0f2f1; border-left: 6px solid var(--pix); padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .bloco-atencao-cartao { background: #e1f5fe; border-left: 6px solid var(--info); padding: 15px; border-radius: 8px; margin: 15px 0; color: #01579b; font-size: 0.9rem; }
+        .regra-cancelamento { background: #fdf2f2; border: 2px solid var(--alerta); padding: 15px; border-radius: 12px; margin: 15px 0; }
         .importante { color: var(--alerta); font-weight: bold; text-transform: uppercase; }
 
         .lista-detalhes { list-style: none; padding: 0; }
-        .lista-detalhes li { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 12px; }
-        .lista-detalhes i { color: var(--primaria); margin-top: 4px; }
+        .lista-detalhes li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
+        .lista-detalhes i { color: var(--primaria); margin-top: 5px; }
+
+        /* VITRINE */
+        .vitrine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+        .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        
+        /* GAVETAS */
+        .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+        .gaveta-dir { right: 0; } .gaveta-esq { left: 0; }
+        .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
+
+        .modal { display: none; position: fixed; z-index: 300; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; }
     </style>
 </head>
 <body>
 
-<button class="nav-btn btn-menu" onclick="toggle('menu', '280px')">☰</button>
-<button class="nav-btn btn-cart" onclick="toggle('cart', '320px')">
-    <i class="fas fa-shopping-basket"></i>
-    <span class="badge" id="cont">0</span>
-</button>
-
-<div id="menu" class="gaveta gaveta-esq">
-    <div style="padding:20px; background:var(--fundo)"><strong>Doce Encanto</strong></div>
-    <a href="index.html">Sobre</a>
-    <a href="unidades.html">Cardápio</a>
-    <a href="kits.html">Kits</a>
-    <a href="logistica.html">Gestão</a>
+<button class="btn-menu" onclick="toggleG('gavMenu', '250px')">☰ Menu</button>
+<div id="gavMenu" class="gaveta gaveta-esq">
+    <div style="padding: 20px; background: var(--secundaria); color: var(--primaria);"><h3 style="margin:0">Doce Encanto</h3></div>
+    <a href="index.html">🏠 Sobre</a>
+    <a href="unidades.html">🍬 Setor Doces</a>
+    <a href="kits.html">🎁 Kits de Doces</a>
+    <a href="contato.html">📞 Contato</a> 
+    <a href="logistica.html">📦 Gestão</a>
+    <div style="padding: 20px;"><button class="btn-principal" onclick="toggleG('gavMenu', '0')">Fechar Menu</button></div>
 </div>
 
-<div id="cart" class="gaveta gaveta-dir">
-    <div style="padding:20px; border-bottom:1px solid #eee;"><strong>Pedido Atual</strong><span onclick="toggle('cart', '0')" style="float:right; cursor:pointer">✕</span></div>
-    <div id="itens-lista" style="padding:20px;">Carrinho vazio...</div>
-    <div style="padding:20px; border-top:1px solid #eee;">
-        <h3 id="total">Total: R$ 0,00</h3>
-        <button onclick="finalizarPedido()" style="width:100%; padding:15px; background:#25d366; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">ENVIAR PEDIDO</button>
+<button class="cart-icon" onclick="toggleG('gavCart', '320px')">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-count" id="contagem">0</span>
+</button>
+<div id="gavCart" class="gaveta gaveta-dir">
+    <div style="padding: 20px;">
+        <span onclick="toggleG('gavCart', '0')" style="cursor:pointer; font-size: 25px; float: right;">&times;</span>
+        <h2>Meu Pedido</h2>
+        <div id="lista-itens" style="margin-top:20px;">Carrinho vazio...</div>
+        <hr>
+        <h3 id="total-carrinho">Total: R$ 0,00</h3>
+        <button class="btn-principal" style="background:#25d366" onclick="fluxoFinalizar()">Finalizar Pedido</button>
     </div>
 </div>
 
@@ -102,49 +116,132 @@
         </div>
 
         <div class="bloco-atencao-cartao">
-            <i class="fas fa-info-circle"></i> <strong>Aviso:</strong> Estamos analisando a viabilidade técnica para adicionar a forma de pagamento via <strong>cartão</strong> em breve. Fiquem ligados!
+            <i class="fas fa-info-circle"></i> <strong>Aviso:</strong> Estamos analisando a viabilidade técnica para adicionar a forma de pagamento via <strong>cartão</strong> em breve.
         </div>
 
         <div class="regra-cancelamento">
             <h3 style="margin-top:0; color:var(--alerta)"><i class="fas fa-ban"></i> REGRAS DE CANCELAMENTO</h3>
-            <p style="margin:0;"><span class="importante">Atenção:</span> O cancelamento do pedido só é permitido de forma <strong>antecipada</strong>. Não realizamos estorno para pedidos já preparados ou em rota de entrega.</p>
+            <p style="margin:0;"><span class="importante">Atenção:</span> O cancelamento do pedido só é permitido de forma <strong>antecipada</strong>. Não realizamos estorno para pedidos já preparados.</p>
         </div>
+    </div>
+
+    <div id="vitrine" class="vitrine-grid"></div>
+</div>
+
+<div id="modalKit" class="modal">
+    <div class="modal-content">
+        <img id="m-img" style="width:100%; border-radius:10px;">
+        <h2 id="m-nome"></h2>
+        <p id="m-desc"></p>
+        <h3 id="m-preco" style="color:var(--primaria)"></h3>
+        <button class="btn-principal" id="btn-confirmar">Adicionar ao Carrinho</button>
+        <p onclick="fecharM()" style="cursor:pointer; margin-top:15px; color:#666;">Cancelar</p>
     </div>
 </div>
 
 <script>
-    let pedido = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
-    function toggle(id, size) { document.getElementById(id).style.width = size; }
-    function atualizarInterface() {
-        const lista = document.getElementById('itens-lista');
-        const cont = document.getElementById('cont');
-        const totalTxt = document.getElementById('total');
-        cont.innerText = pedido.length;
-        let totalSoma = 0;
-        if(pedido.length === 0) { lista.innerHTML = 'Carrinho vazio...'; } 
-        else {
-            lista.innerHTML = "";
-            pedido.forEach((item, index) => {
-                totalSoma += item.preco;
-                lista.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${item.nome}</span><i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i></div>`;
+    let carrinho = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
+    const apiID = "ti9a03weq125d";
+    const WHATSAPP = "5544998392373"; 
+
+    function toggleG(id, tam) { document.getElementById(id).style.width = tam; }
+    function fecharM() { document.getElementById('modalKit').style.display = 'none'; }
+    function salvar() { localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho)); }
+    function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
+
+    function tratarCaminhoImagem(valor) {
+        if (!valor || valor === "" || valor === "default.jpg") return "https://via.placeholder.com/300x200?text=Doce+Encanto";
+        let v = valor.trim();
+        return v.toLowerCase().startsWith('http') ? v : "imagens/" + v;
+    }
+
+    async function carregar() {
+        const vitrine = document.getElementById('vitrine');
+        try {
+            const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=Kits`);
+            const dados = await resposta.json();
+            vitrine.innerHTML = '';
+            dados.forEach(item => {
+                const nome = item.Kits || item.kits || item.Nome || item.A;
+                const preco = item.Preco || item.preco || item.B || "0.00";
+                const desc = item.Descricao || item.C || "";
+                const rawImg = item.Imagen || item.Imagem || item.D || "";
+                const urlImagem = tratarCaminhoImagem(rawImg);
+                if (!nome || nome === "Kits") return;
+                vitrine.innerHTML += `
+                    <div class="card">
+                        <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Doce+Encanto'">
+                        <h3>${nome}</h3>
+                        <p style="font-weight:bold; color:var(--primaria)">R$ ${preco}</p>
+                        <button class="btn-principal" onclick="abrirModal('${nome}', '${preco}', '${desc}', '${urlImagem}')">Ver Detalhes</button>
+                    </div>`;
+            });
+            atualizarIcone();
+        } catch (erro) { console.log("Erro ao carregar os kits"); }
+    }
+
+    function abrirModal(n, p, d, urlFinal) {
+        document.getElementById('m-nome').innerText = n;
+        document.getElementById('m-preco').innerText = "R$ " + p;
+        document.getElementById('m-desc').innerText = d;
+        document.getElementById('m-img').src = urlFinal;
+        document.getElementById('modalKit').style.display = 'flex';
+        document.getElementById('btn-confirmar').onclick = function() {
+            carrinho.push({ nome: n, preco: p });
+            salvar(); atualizarIcone(); fecharM(); toggleG('gavCart', '320px');
+        };
+    }
+
+    function atualizarIcone() {
+        document.getElementById('contagem').innerText = carrinho.length;
+        renderizarCarrinho();
+    }
+
+    function renderizarCarrinho() {
+        const lista = document.getElementById('lista-itens');
+        let soma = 0;
+        lista.innerHTML = '';
+        if (carrinho.length === 0) {
+            lista.innerHTML = '<p style="text-align:center">Carrinho vazio...</p>';
+        } else {
+            carrinho.forEach((item, index) => {
+                let pLimpo = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
+                soma += isNaN(pLimpo) ? 0 : pLimpo;
+                lista.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <div style="text-align:left"><span>${item.nome}</span><br><small>R$ ${item.preco}</small></div>
+                        <i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i>
+                    </div>`;
             });
         }
-        totalTxt.innerText = `Total: R$ ${totalSoma.toFixed(2).replace('.', ',')}`;
+        document.getElementById('total-carrinho').innerText = "Total: R$ " + soma.toFixed(2).replace('.', ',');
     }
-    function remover(index) {
-        pedido.splice(index, 1);
-        localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(pedido));
-        atualizarInterface();
-    }
-    function finalizarPedido() {
-        if(pedido.length === 0) return alert("Seu carrinho está vazio!");
-        let mensagem = "Olá! Gostaria de fazer um pedido:%0A" + 
-                        pedido.map(p => "- " + p.nome).join("%0A") + 
-                        "%0A%0AEstou ciente das regras de pagamento e cancelamento.";
-        window.open(`https://wa.me/5544999999999?text=${mensagem}`);
-    }
-    atualizarInterface();
-</script>
 
+    function remover(i) { carrinho.splice(i, 1); salvar(); atualizarIcone(); }
+
+    async function fluxoFinalizar() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
+        const pedidoID = gerarID();
+        const totalStr = document.getElementById('total-carrinho').innerText;
+
+        try {
+            await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ data: [{
+                    "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli,
+                    "itens": carrinho.map(i => i.nome).join(" + "), "valor": totalStr,
+                    "data_compra": new Date().toLocaleString('pt-BR')
+                }]})
+            });
+            alert("✅ Pedido Registrado!");
+            window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido: ${pedidoID}%0ANome: ${nomeCli}%0AEstou ciente das regras de PIX e cancelamento.`;
+            carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
+        } catch (e) { alert("Erro ao processar."); }
+    }
+
+    carregar();
+</script>
 </body>
 </html>
