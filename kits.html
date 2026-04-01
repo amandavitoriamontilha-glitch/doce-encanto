@@ -82,14 +82,13 @@
     function salvar() { localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho)); }
     function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
 
-    // FUNÇÃO PARA TRATAR O CAMINHO DA IMAGEM (LINK OU PASTA)
     function tratarCaminhoImagem(valor) {
         if (!valor || valor === "" || valor === "default.jpg") return "https://via.placeholder.com/300x200?text=Doce+Encanto";
         let v = valor.trim();
         if (v.toLowerCase().startsWith('http')) {
-            return v; // Usa o link direto da internet
+            return v; 
         }
-        return "imagens/" + v; // Busca na pasta local
+        return "imagens/" + v; 
     }
 
     async function carregar() {
@@ -103,9 +102,7 @@
                 const preco = item.Preco || item.preco || item.B || "0.00";
                 const desc = item.Descricao || item.C || "";
                 const rawImg = item.Imagen || item.Imagem || item.D || "";
-                
                 const urlImagem = tratarCaminhoImagem(rawImg);
-                
                 if (!nome || nome === "Kits") return;
                 vitrine.innerHTML += `
                     <div class="card">
@@ -161,23 +158,43 @@
     async function fluxoFinalizar() {
         if(carrinho.length === 0) return alert("Carrinho vazio!");
         const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
+        const localCli = prompt("Local de Entrega (Sala/Bloco):") || "Não informado";
         const pedidoID = gerarID();
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
+        const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
 
         try {
-            await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
+            // ENVIO PARA O EXCEL (ABA PEDIDOS)
+            const response = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ data: [{
-                    "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli,
-                    "itens": carrinho.map(i => i.nome).join(" + "), "valor": totalStr,
+                    "status": "Pendente", 
+                    "id_pedido": pedidoID, 
+                    "cliente": nomeCli,
+                    "local": localCli,
+                    "itens": itensConcatenados, 
+                    "valor": totalStr,
                     "data_compra": new Date().toLocaleString('pt-BR')
                 }]})
             });
-            alert("✅ Pedido Registrado! ID: " + pedidoID);
-            window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido Kit ${pedidoID}\nNome: ${nomeCli}`;
-            carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
-        } catch (e) { alert("Erro ao processar pedido."); }
+
+            if(response.ok) {
+                alert("✅ Pedido Registrado na Planilha! ID: " + pedidoID);
+                // REDIRECIONAMENTO WHATSAPP
+                const msg = `Pedido Kit: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}%0ATotal: R$ ${totalStr}`;
+                window.location.href = `https://wa.me/${WHATSAPP}?text=${msg}`;
+                
+                carrinho = []; 
+                salvar(); 
+                atualizarIcone(); 
+                toggleG('gavCart', '0');
+            } else {
+                alert("Erro ao salvar na planilha. Verifique a conexão.");
+            }
+        } catch (e) { 
+            alert("Erro ao processar pedido."); 
+        }
     }
 
     carregar();
