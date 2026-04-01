@@ -81,15 +81,10 @@
     function fecharM() { document.getElementById('modalDoce').style.display = 'none'; }
     function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
 
-    // FUNÇÃO QUE CORRIGE O CAMINHO DA FOTO
     function tratarFoto(valor) {
         if (!valor || valor === "") return "https://via.placeholder.com/300x200?text=Sem+Foto";
         let v = valor.trim();
-        // Se começar com http, usa o link direto
-        if (v.toLowerCase().startsWith('http')) {
-            return v;
-        }
-        // Se for só o nome do arquivo, busca na pasta imagens
+        if (v.toLowerCase().startsWith('http')) return v;
         return "imagens/" + v;
     }
 
@@ -104,9 +99,7 @@
                 const p = item.B || item.preco || item.Preco;
                 const d = item.C || item.descricao || "";
                 const rawFoto = item.D || item.Imagem || item.foto || "";
-
                 const fotoLink = tratarFoto(rawFoto);
-
                 if(!n || n === "Nome") return;
                 vitrine.innerHTML += `
                     <div class="card">
@@ -163,22 +156,44 @@
         const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
         const opcao = prompt("1: BUSCAR SALA 9D\n2: COMBINAR ENTREGA");
         let localFinal = opcao === "1" ? "Sala 9D" : "A combinar";
+        
         const pedidoID = gerarID();
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
+        const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
 
         try {
-            await fetch(`${urlAPI}?sheet=pedidos`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+            // GRAVAÇÃO NO EXCEL (ABA PEDIDOS) ANTES DO WHATSAPP
+            const response = await fetch(`${urlAPI}?sheet=pedidos`, {
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ data: [{
-                    "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli, 
-                    "local": localFinal, "itens": carrinho.map(i => i.nome).join(" + "), 
-                    "valor": totalStr, "data_compra": new Date().toLocaleString('pt-BR')
+                    "status": "Pendente", 
+                    "id_pedido": pedidoID, 
+                    "cliente": nomeCli, 
+                    "local": localFinal, 
+                    "itens": itensConcatenados, 
+                    "valor": totalStr, 
+                    "data_compra": new Date().toLocaleString('pt-BR')
                 }]})
             });
-            alert("✅ Gravado! ID: " + pedidoID); 
-            window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido ${pedidoID}\nCliente: ${nomeCli}`;
-            carrinho = []; localStorage.removeItem('carrinhoDoceEncanto'); atualizarC(); toggleG('idCarrinho', '0');
-        } catch (e) { alert("Erro ao enviar."); }
+
+            if(response.ok) {
+                alert("✅ Pedido Registrado! ID: " + pedidoID); 
+                // REDIRECIONAMENTO WHATSAPP COM TODOS OS DADOS
+                const textoWhats = `Pedido Doces: *${pedidoID}*%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}%0ATotal: R$ ${totalStr}%0ALocal: ${localFinal}`;
+                window.location.href = `https://wa.me/${WHATSAPP}?text=${textoWhats}`;
+                
+                // LIMPEZA FINAL
+                carrinho = []; 
+                localStorage.removeItem('carrinhoDoceEncanto'); 
+                atualizarC(); 
+                toggleG('idCarrinho', '0');
+            } else {
+                alert("Erro ao gravar pedido. Tente novamente.");
+            }
+        } catch (e) { 
+            alert("Erro na conexão ao enviar pedido."); 
+        }
     }
 
     carregar();
