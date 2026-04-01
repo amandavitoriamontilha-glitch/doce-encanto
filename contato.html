@@ -182,20 +182,40 @@
         if(!n || !l) return;
         
         const id = gerarID();
+        const totalTexto = document.getElementById('total-carrinho').innerText.replace('Total: R$ ','');
+        const itensTexto = carrinho.map(i => i.nome).join(" + ");
+
         try {
-            await fetch(`${urlAPI}?sheet=pedidos`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ data: [{ 
-                    "status":"Pendente", "id_pedido":id, "cliente":n, "local":l, 
-                    "itens":carrinho.map(i=>i.nome).join(" + "), 
-                    "valor": document.getElementById('total-carrinho').innerText.replace('Total: R$ ',''), 
-                    "data_compra": new Date().toLocaleString() 
-                }]})
+            // Salva na planilha ANTES de ir para o WhatsApp
+            const response = await fetch(`${urlAPI}?sheet=pedidos`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    data: [{ 
+                        "status": "Pendente", 
+                        "id_pedido": id, 
+                        "cliente": n, 
+                        "local": l, 
+                        "itens": itensTexto, 
+                        "valor": totalTexto, 
+                        "data_compra": new Date().toLocaleString('pt-BR') 
+                    }]
+                })
             });
-            alert("Pedido Enviado! ID: " + id);
-            window.location.href = `https://wa.me/${WHATSAPP}?text=Oi! Pedido ${id} de ${n}. Itens: ${carrinho.map(i=>i.nome).join(", ")}`;
-            carrinho = []; localStorage.removeItem('carrinhoDoceEncanto'); atualizarC();
-        } catch (e) { alert("Erro ao processar."); }
+
+            if(response.ok) {
+                alert("Pedido Registrado com Sucesso! ID: " + id);
+                // Redireciona para o WhatsApp após o sucesso no salvamento
+                window.location.href = `https://wa.me/${WHATSAPP}?text=Oi! Pedido ${id} de ${n}. Itens: ${itensTexto}. Total: R$ ${totalTexto}`;
+                carrinho = []; 
+                localStorage.removeItem('carrinhoDoceEncanto'); 
+                atualizarC();
+            } else {
+                alert("Erro ao salvar pedido na planilha.");
+            }
+        } catch (e) { 
+            alert("Erro de conexão ao processar pedido."); 
+        }
     }
 
     async function enviarFeedback() {
