@@ -58,9 +58,6 @@
         <hr>
         <h3 id="total-carrinho">Total: R$ 0,00</h3>
         <button class="btn-principal" style="background:#25d366" onclick="fluxoFinalizar()">Finalizar Pedido</button>
-        <p style="font-size: 10px; color: #666; text-align: center; margin-top: 10px;">
-            *Escolha buscar na Sala 9D ou combinar a entrega.
-        </p>
     </div>
 </div>
 
@@ -121,26 +118,42 @@
     }
 
     async function fluxoFinalizar() {
-        if(carrinho.length === 0) return alert("Carrinho vazio!");
-        
-        const nomeCli = prompt("Seu nome:");
-        if(!nomeCli) return;
+        if(carrinho.length === 0) {
+            alert("O carrinho está vazio!");
+            return;
+        }
 
-        const opcao = prompt("Como deseja receber seu pedido?\nDigite 1 para: BUSCAR NA SALA 9D\nDigite 2 para: COMBINAR ENTREGA VIA WHATSAPP");
+        // Validação do NOME (Apenas letras)
+        let nomeCli = "";
+        const apenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
 
+        while (true) {
+            nomeCli = prompt("Digite seu NOME (Obrigatório - Apenas letras):");
+            if (nomeCli === null) return;
+            nomeCli = nomeCli.trim();
+
+            if (nomeCli === "") {
+                alert("O nome é obrigatório!");
+            } else if (!apenasLetras.test(nomeCli)) {
+                alert("Por favor, digite apenas letras no nome.");
+            } else {
+                break;
+            }
+        }
+
+        // Validação do LOCAL
         let localFinal = "";
-        let msgWhats = "";
+        let opcao = prompt("COMO DESEJA RECEBER?\n1: BUSCAR NA SALA 9D\n2: COMBINAR ENTREGA");
+        
+        if (opcao === null) return;
 
         if (opcao === "1") {
-            localFinal = "Retirada na Sala 9D";
-            msgWhats = "Vou buscar na Sala 9D.";
+            localFinal = "Sala 9D";
         } else if (opcao === "2") {
-            const tel = prompt("Informe seu WhatsApp para combinarmos a entrega:");
-            if(!tel) return alert("Número necessário!");
-            localFinal = "A combinar (Whats: " + tel + ")";
-            msgWhats = "Quero combinar a entrega. Contato: " + tel;
+            localFinal = "A combinar via WhatsApp";
         } else {
-            return alert("Opção inválida.");
+            alert("Opção inválida! Escolha 1 ou 2.");
+            return;
         }
 
         const pedidoID = gerarID();
@@ -148,7 +161,11 @@
         const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
 
         try {
-            // ENVIO PARA O EXCEL (ABA PEDIDOS) ANTES DO WHATSAPP
+            // Bloqueia o botão para evitar múltiplos envios
+            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+
             const response = await fetch(`${urlAPI}?sheet=pedidos`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -164,21 +181,25 @@
             });
 
             if(response.ok) {
-                alert("✅ Pedido Registrado com Sucesso! ID: " + pedidoID);
-                // REDIRECIONAMENTO WHATSAPP COM OS DADOS COMPLETOS
-                let link = `https://wa.me/${WHATSAPP}?text=Oi! Pedido Gestão Doce Encanto *${pedidoID}*.\nNome: ${nomeCli}\nItens: ${itensConcatenados}\nTotal: R$ ${totalStr}\n*Opção:* ${msgWhats}`;
+                alert("✅ Pedido Registrado!\nID: " + pedidoID);
+                let link = `https://wa.me/${WHATSAPP}?text=*PEDIDO GESTÃO*%0A*ID:* ${pedidoID}%0A*Nome:* ${nomeCli}%0A*Itens:* ${itensConcatenados}%0A*Total:* R$ ${totalStr}%0A*Entrega:* ${localFinal}`;
                 window.location.href = link;
                 
-                // LIMPEZA DO CARRINHO
                 carrinho = []; 
                 localStorage.removeItem('carrinhoDoceEncanto'); 
                 atualizarC();
                 toggleG('idCarrinho', '0');
             } else {
-                alert("Houve um erro ao salvar o pedido na planilha. Tente novamente.");
+                alert("Erro ao salvar pedido. Tente novamente.");
             }
         } catch (e) { 
-            alert("Erro ao processar pedido. Verifique sua internet."); 
+            alert("Erro de conexão."); 
+        } finally {
+            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            if(btn) {
+                btn.disabled = false;
+                btn.innerText = "Finalizar Pedido";
+            }
         }
     }
 
