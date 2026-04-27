@@ -19,7 +19,6 @@
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--fundo); color: var(--marrom); line-height: 1.6; }
         
-        /* HEADER ROSA */
         header { 
             background: var(--secundaria); 
             padding: 30px 20px; 
@@ -30,14 +29,12 @@
         .logo-principal { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--primaria); margin: 0; line-height: 1; }
         .slogan { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; color: var(--marrom); text-transform: uppercase; margin-top: 10px; }
 
-        /* NAVEGAÇÃO */
         .btn-menu { position: fixed; top: 15px; left: 15px; background: var(--primaria); color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; z-index: 100; font-weight: bold; border: none; }
         .cart-icon { position: fixed; top: 15px; right: 15px; background: var(--primaria); color: white; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 100; border: none; }
         .cart-count { position: absolute; top: -5px; right: -5px; background: #ff9800; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; }
         
         .container { max-width: 800px; margin: 20px auto; padding: 20px; padding-bottom: 60px; }
         
-        /* BLOCOS DE TEXTO RECUPERADOS */
         .secao-info { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .titulo-secao { color: var(--primaria); border-bottom: 2px solid var(--fundo); padding-bottom: 8px; margin-bottom: 15px; font-family: 'Montserrat', sans-serif; font-size: 1.3rem; }
         
@@ -50,13 +47,12 @@
         .lista-detalhes li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
         .lista-detalhes i { color: var(--primaria); margin-top: 5px; }
 
-        /* VITRINE */
         .vitrine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
         .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .btn-principal:disabled { background: #ccc; cursor: not-allowed; }
         
-        /* GAVETAS */
         .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         .gaveta-dir { right: 0; } .gaveta-esq { left: 0; }
         .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
@@ -101,31 +97,26 @@
 <div class="container">
     <div class="secao-info">
         <h2 class="titulo-secao">Sobre Nós</h2>
-        <p>A <strong>Doce Encanto</strong> foi criada por estudantes de <strong>Engenharia de Software</strong> da <strong>UniCV</strong> para oferecer doces de qualidade durante o intervalo e saída das aulas noturnas.</p>
+        <p>A <strong>Doce Encanto</strong> foi criada por estudantes de <strong>Engenharia de Software</strong> da <strong>UniCV</strong>.</p>
 
         <h2 class="titulo-secao">Informações de Atendimento</h2>
         <ul class="lista-detalhes">
             <li><i class="fas fa-map-marker-alt"></i> <span><strong>Localização:</strong> Sala 9D (Bloco de Engenharia de Software B).</span></li>
-            <li><i class="fas fa-clock"></i> <span><strong>Horário:</strong> Segunda a sexta, período noturno da UniCV.</span></li>
-            <li><i class="fas fa-truck"></i> <span><strong>Logística:</strong> Entregas combinadas diretamente nos blocos via WhatsApp.</span></li>
+            <li><i class="fas fa-clock"></i> <span><strong>Horário:</strong> Segunda a sexta, período noturno.</span></li>
         </ul>
 
         <div class="regra-pagamento">
             <h3 style="margin-top:0; color:var(--pix)"><i class="fas fa-qrcode"></i> PAGAMENTO ANTECIPADO</h3>
-            <p style="margin:0;">O pedido só será validado mediante a <strong>confirmação do pagamento via PIX</strong>. Favor enviar o comprovante no WhatsApp.</p>
-        </div>
-
-        <div class="bloco-atencao-cartao">
-            <i class="fas fa-info-circle"></i> <strong>Aviso:</strong> Estamos analisando a viabilidade técnica para adicionar a forma de pagamento via <strong>cartão</strong> em breve.
+            <p style="margin:0;">O pedido só será validado mediante a <strong>confirmação via PIX</strong>.</p>
         </div>
 
         <div class="regra-cancelamento">
             <h3 style="margin-top:0; color:var(--alerta)"><i class="fas fa-ban"></i> REGRAS DE CANCELAMENTO</h3>
-            <p style="margin:0;"><span class="importante">Atenção:</span> O cancelamento do pedido só é permitido de forma <strong>antecipada</strong>. Não realizamos estorno para pedidos já preparados.</p>
+            <p style="margin:0;"><span class="importante">Atenção:</span> Não realizamos estorno para pedidos já preparados.</p>
         </div>
     </div>
 
-    <div id="vitrine" class="vitrine-grid"></div>
+    <div id="vitrine" class="vitrine-grid">Carregando Kits...</div>
 </div>
 
 <div id="modalKit" class="modal">
@@ -177,7 +168,7 @@
                     </div>`;
             });
             atualizarIcone();
-        } catch (erro) { console.log("Erro ao carregar os kits"); }
+        } catch (erro) { vitrine.innerHTML = "Erro ao carregar Kits."; }
     }
 
     function abrirModal(n, p, d, urlFinal) {
@@ -221,41 +212,58 @@
 
     async function fluxoFinalizar() {
         if(carrinho.length === 0) return alert("Carrinho vazio!");
-        const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
-        const localPed = prompt("Local de Retirada (Sala/Bloco):") || "Não informado";
+
+        // VALIDAÇÃO NOME (APENAS LETRAS)
+        let nomeCli = "";
+        const apenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+        while (true) {
+            nomeCli = prompt("Digite seu NOME (Obrigatório - Apenas letras):");
+            if (nomeCli === null) return;
+            nomeCli = nomeCli.trim();
+            if (nomeCli === "") {
+                alert("O nome é obrigatório!");
+            } else if (!apenasLetras.test(nomeCli)) {
+                alert("Por favor, use apenas letras.");
+            } else { break; }
+        }
+
+        // VALIDAÇÃO LOCAL
+        let localPed = "";
+        while (true) {
+            localPed = prompt("Onde você está? (Ex: Sala 9D / Bloco B):");
+            if (localPed === null) return;
+            localPed = localPed.trim();
+            if (localPed === "") { alert("Informe o local para entrega!"); }
+            else { break; }
+        }
+
         const pedidoID = gerarID();
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
         const itensNomes = carrinho.map(i => i.nome).join(" + ");
 
         try {
-            // Salva na aba 'pedidos' do Excel via API
+            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            btn.disabled = true;
+            btn.innerText = "Processando...";
+
             await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ data: [{
-                    "status": "Pendente", 
-                    "id_pedido": pedidoID, 
-                    "cliente": nomeCli,
-                    "local": localPed,
-                    "itens": itensNomes, 
-                    "valor": totalStr,
+                    "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli,
+                    "local": localPed, "itens": itensNomes, "valor": totalStr,
                     "data_compra": new Date().toLocaleString('pt-BR')
                 }]})
             });
             
-            alert("✅ Pedido Registrado com Sucesso!");
+            alert("✅ Pedido Registrado!");
+            window.location.href = `https://wa.me/${WHATSAPP}?text=ID: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensNomes}%0ATotal: R$ ${totalStr}%0ALocal: ${localPed}`;
             
-            // Redireciona para o WhatsApp
-            const textoWhats = `Pedido: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensNomes}%0ATotal: R$ ${totalStr}%0AEstou ciente das regras de PIX e cancelamento.`;
-            window.location.href = `https://wa.me/${WHATSAPP}?text=${textoWhats}`;
-            
-            // Limpa o carrinho
-            carrinho = []; 
-            salvar(); 
-            atualizarIcone(); 
-            toggleG('gavCart', '0');
-        } catch (e) { 
-            alert("Erro ao salvar o pedido na planilha. Tente novamente."); 
+            carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
+        } catch (e) { alert("Erro ao salvar pedido."); }
+        finally {
+            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            if(btn) { btn.disabled = false; btn.innerText = "Finalizar Pedido"; }
         }
     }
 
