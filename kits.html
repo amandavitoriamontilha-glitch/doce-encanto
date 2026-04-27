@@ -17,6 +17,7 @@
         .card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
         .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; background: #f0f0f0; }
         .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .btn-principal:disabled { background: #ccc; cursor: not-allowed; }
         .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         .gaveta-dir { right: 0; } .gaveta-esq { left: 0; }
         .gaveta a { display: block; padding: 15px 20px; color: var(--primaria); text-decoration: none; font-weight: bold; border-bottom: 1px solid #eee; }
@@ -90,7 +91,6 @@
     function tratarCaminhoImagem(valor) {
         if (!valor || valor.trim() === "") return "https://via.placeholder.com/300x200?text=Sem+Imagem";
         let v = valor.toString().trim();
-        // Se for link da internet (http), base64 ou link relativo com extensão de imagem
         if (/^(http|https|data:image|\/\/)/i.test(v) || /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(v)) {
             return v; 
         }
@@ -100,20 +100,16 @@
     async function carregar() {
         const vitrine = document.getElementById('vitrine');
         try {
-            // Note que aqui o nome da aba 'kits' está em minúsculo
             const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=kits`);
             const dados = await resposta.json();
             
-            console.log("Dados carregados:", dados); // Para você ver no console se os dados chegaram
-
             if(!dados || dados.length === 0 || dados.error) {
-                vitrine.innerHTML = "Verifique se o nome da aba na planilha é 'kits' (em minúsculo).";
+                vitrine.innerHTML = "Verifique se a aba na planilha se chama 'kits'.";
                 return;
             }
 
             vitrine.innerHTML = '';
             dados.forEach(item => {
-                // USANDO NOMES EM MINÚSCULO CONFORME VOCÊ DISSE
                 const nomeRaw = item.kits || item.nome;
                 const precoRaw = item.preco || "0,00";
                 const descRaw = item.descricao || "Combo especial Doce Encanto";
@@ -137,8 +133,7 @@
             });
             atualizarIcone();
         } catch (erro) { 
-            console.error(erro);
-            vitrine.innerHTML = "Erro ao conectar com a planilha. Verifique a internet ou o ID da API."; 
+            vitrine.innerHTML = "Erro ao conectar com a planilha."; 
         }
     }
 
@@ -182,29 +177,78 @@
     function remover(i) { carrinho.splice(i, 1); salvar(); atualizarIcone(); }
 
     async function fluxoFinalizar() {
-        if(carrinho.length === 0) return alert("Adicione itens ao carrinho!");
-        const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
-        const localCli = prompt("Onde entregar? (Bloco/Sala):") || "Não informado";
+        if(carrinho.length === 0) {
+            alert("O carrinho está vazio!");
+            return;
+        }
+
+        // Validação de Nome (Apenas letras)
+        let nomeCli = "";
+        const apenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+
+        while (true) {
+            nomeCli = prompt("Digite seu NOME (Apenas letras):");
+            if (nomeCli === null) return;
+            nomeCli = nomeCli.trim();
+
+            if (nomeCli === "") {
+                alert("O nome é obrigatório!");
+            } else if (!apenasLetras.test(nomeCli)) {
+                alert("Por favor, use apenas letras no nome.");
+            } else {
+                break;
+            }
+        }
+
+        // Validação de Local
+        let localFinal = "";
+        let opcao = prompt("COMO DESEJA RECEBER?\n1: BUSCAR NA SALA 9D\n2: COMBINAR ENTREGA");
+        
+        if (opcao === null) return;
+
+        if (opcao === "1") {
+            localFinal = "Sala 9D";
+        } else if (opcao === "2") {
+            localFinal = "A combinar";
+        } else {
+            alert("Opção inválida! Escolha 1 ou 2.");
+            return;
+        }
+
+        const pedidoID = gerarID();
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
         const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
-        const pedidoID = gerarID();
 
         try {
+            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+
             const response = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ data: [{
                     "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli,
-                    "local": localCli, "itens": itensConcatenados, "valor": totalStr,
+                    "local": localFinal, "itens": itensConcatenados, "valor": totalStr,
                     "data_compra": new Date().toLocaleString('pt-BR')
                 }]})
             });
+
             if(response.ok) {
-                alert("Pedido Enviado com Sucesso!");
-                window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}`;
+                alert("✅ Pedido Enviado!");
+                const textoWhats = `*NOVO PEDIDO KITS*%0A*ID:* ${pedidoID}%0A*Nome:* ${nomeCli}%0A*Itens:* ${itensConcatenados}%0A*Total:* R$ ${totalStr}%0A*Entrega:* ${localFinal}`;
+                window.location.href = `https://wa.me/${WHATSAPP}?text=${textoWhats}`;
                 carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
             }
-        } catch (e) { alert("Erro ao enviar. Tente novamente."); }
+        } catch (e) { 
+            alert("Erro ao enviar pedido."); 
+        } finally {
+            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            if(btn) {
+                btn.disabled = false;
+                btn.innerText = "Finalizar Pedido";
+            }
+        }
     }
 
     window.onload = carregar;
