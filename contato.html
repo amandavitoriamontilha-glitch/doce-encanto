@@ -19,7 +19,7 @@
 
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--fundo); color: var(--marrom); line-height: 1.6; }
 
-        /* --- HEADER PADRONIZADO --- */
+        /* --- HEADER --- */
         header { 
             background: var(--secundaria); 
             padding: 35px 20px; 
@@ -42,7 +42,6 @@
         .gaveta-header { padding: 20px; background: var(--secundaria); color: var(--primaria); font-weight: bold; border-bottom: 1px solid #eee; }
         .gaveta a { padding: 15px 25px; text-decoration: none; color: var(--primaria); display: block; border-bottom: 1px solid #f0f0f0; font-weight: bold; }
 
-        /* BOTÃO PADRÃO DO CÓDIGO DE KITS */
         .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
 
         /* --- CONTEÚDO --- */
@@ -59,7 +58,7 @@
         .form-group label { font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 8px; color: var(--marrom); text-transform: uppercase; letter-spacing: 1px; }
         .campo { width: 100%; padding: 14px; border: 2px solid #f7f7f7; border-radius: 12px; font-family: inherit; font-size: 1rem; background: #fafafa; transition: 0.3s; box-sizing: border-box; }
         .btn-acao { background: var(--primaria); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(173, 20, 87, 0.2); }
-        .btn-acao:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-acao:disabled { background: #ccc !important; cursor: not-allowed; }
         .text-destaque { color: var(--primaria); font-weight: bold; }
     </style>
 </head>
@@ -88,11 +87,11 @@
         Meu Pedido
         <span onclick="toggleG('idCarrinho', '0')" style="float: right; cursor: pointer;">&times;</span>
     </div>
-    <div id="lista-itens" style="padding: 20px; flex-grow: 1;">Carrinho vazio...</div>
+    <div id="lista-itens" style="padding: 20px; flex-grow: 1; overflow-y: auto;">Carrinho vazio...</div>
     <div style="padding: 20px; border-top: 1px solid #eee;">
         <h3 id="total-carrinho" style="margin-bottom: 15px;">Total: R$ 0,00</h3>
         <p style="font-size: 0.7rem; color: var(--primaria); margin-bottom: 10px;">* Pagamento via PIX Antecipado.</p>
-        <button class="btn-acao" style="background:var(--sucesso)" onclick="finalizar()">Finalizar Pedido</button>
+        <button class="btn-acao" style="background:var(--sucesso)" onclick="finalizar()" id="btn-finalizar">Finalizar Pedido</button>
     </div>
 </div>
 
@@ -175,65 +174,101 @@
         atualizarC();
     }
 
+    // --- FLUXO FINALIZAR PADRONIZADO ---
     async function finalizar() {
         if(carrinho.length === 0) return alert("Adicione itens antes de finalizar!");
-        const n = prompt("Seu Nome:");
-        const l = prompt("Local de Retirada (Sala/Bloco):");
-        if(!n || !l) return;
-        
-        const id = gerarID();
-        const totalTexto = document.getElementById('total-carrinho').innerText.replace('Total: R$ ','');
-        const itensTexto = carrinho.map(i => i.nome).join(" + ");
+
+        // Validação de Nome (apenas letras)
+        let nomeCli = "";
+        const apenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+        while (true) {
+            nomeCli = prompt("Digite seu NOME (Apenas letras):");
+            if (nomeCli === null) return;
+            nomeCli = nomeCli.trim();
+            if (nomeCli === "") alert("O nome não pode estar vazio!");
+            else if (!apenasLetras.test(nomeCli)) alert("Por favor, use apenas letras.");
+            else break;
+        }
+
+        // Escolha de Local
+        const opcao = prompt("COMO DESEJA RECEBER?\n1: BUSCAR NA SALA 9D\n2: COMBINAR ENTREGA");
+        if (opcao === null) return;
+        let localFinal = opcao === "1" ? "Sala 9D" : (opcao === "2" ? "A combinar" : "");
+        if (localFinal === "") return alert("Opção inválida! Escolha 1 ou 2.");
+
+        const pedidoID = gerarID();
+        const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
+        const itensFormatados = carrinho.map(i => i.nome).join(" + ");
+        const btn = document.getElementById('btn-finalizar');
 
         try {
-            // Salva na planilha ANTES de ir para o WhatsApp
-            const response = await fetch(`${urlAPI}?sheet=pedidos`, {
-                method: 'POST',
+            btn.disabled = true;
+            btn.innerText = "Registrando...";
+
+            await fetch(`${urlAPI}?sheet=pedidos`, {
+                method: 'POST', 
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ 
-                    data: [{ 
-                        "status": "Pendente", 
-                        "id_pedido": id, 
-                        "cliente": n, 
-                        "local": l, 
-                        "itens": itensTexto, 
-                        "valor": totalTexto, 
-                        "data_compra": new Date().toLocaleString('pt-BR') 
-                    }]
-                })
+                body: JSON.stringify({ data: [{ 
+                    "status":"Pendente", 
+                    "id_pedido": pedidoID, 
+                    "cliente": nomeCli, 
+                    "local": localFinal, 
+                    "itens": itensFormatados, 
+                    "valor": totalStr, 
+                    "data_compra": new Date().toLocaleString('pt-BR') 
+                }]})
             });
 
-            if(response.ok) {
-                alert("Pedido Registrado com Sucesso! ID: " + id);
-                // Redireciona para o WhatsApp após o sucesso no salvamento
-                window.location.href = `https://wa.me/${WHATSAPP}?text=Oi! Pedido ${id} de ${n}. Itens: ${itensTexto}. Total: R$ ${totalTexto}`;
-                carrinho = []; 
-                localStorage.removeItem('carrinhoDoceEncanto'); 
-                atualizarC();
-            } else {
-                alert("Erro ao salvar pedido na planilha.");
-            }
+            alert("✅ Pedido Gravado! ID: " + pedidoID);
+            const msgZap = `*NOVO PEDIDO DOCE ENCANTO*%0A*ID:* ${pedidoID}%0A*Cliente:* ${nomeCli}%0A*Itens:* ${itensFormatados}%0A*Local:* ${localFinal}%0A*Total:* R$ ${totalStr}`;
+            window.location.href = `https://wa.me/${WHATSAPP}?text=${msgZap}`;
+            
+            carrinho = []; 
+            localStorage.removeItem('carrinhoDoceEncanto'); 
+            atualizarC(); 
+            toggleG('idCarrinho', '0');
         } catch (e) { 
-            alert("Erro de conexão ao processar pedido."); 
+            alert("Erro de conexão. Tente novamente."); 
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Finalizar Pedido";
         }
     }
 
     async function enviarFeedback() {
-        const nome = document.getElementById('fb-nome').value;
-        const origem = document.getElementById('fb-origem').value;
-        const msg = document.getElementById('fb-mensagem').value;
+        const nome = document.getElementById('fb-nome').value.trim();
+        const origem = document.getElementById('fb-origem').value.trim();
+        const msg = document.getElementById('fb-mensagem').value.trim();
         const btn = document.getElementById('btn-feedback');
-        if(!nome || !origem || !msg) return alert("Por favor, preencha o feedback completo!");
-        btn.disabled = true; btn.innerText = "Enviando carinho...";
+
+        if(!nome || !origem || !msg) return alert("Por favor, preencha todos os campos do feedback!");
+        
+        btn.disabled = true; 
+        btn.innerText = "Enviando carinho...";
+
         try {
             await fetch(`${urlAPI}?sheet=feedbacks`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [{ "nome_completo": nome, "origem_turma": origem, "feedback": msg, "data": new Date().toLocaleString('pt-BR') }]})
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: [{ 
+                    "nome_completo": nome, 
+                    "origem_turma": origem, 
+                    "feedback": msg, 
+                    "data": new Date().toLocaleString('pt-BR') 
+                }]})
             });
-            alert("✨ Recebemos seu feedback!");
-            document.getElementById('fb-nome').value = ""; document.getElementById('fb-origem').value = ""; document.getElementById('fb-mensagem').value = "";
-        } catch (e) { alert("Erro ao enviar."); } finally { btn.disabled = false; btn.innerText = "Enviar Feedback à Equipe"; }
+            alert("✨ Recebemos seu feedback! Muito obrigado.");
+            document.getElementById('fb-nome').value = ""; 
+            document.getElementById('fb-origem').value = ""; 
+            document.getElementById('fb-mensagem').value = "";
+        } catch (e) { 
+            alert("Erro ao enviar feedback."); 
+        } finally { 
+            btn.disabled = false; 
+            btn.innerText = "Enviar Feedback à Equipe"; 
+        }
     }
+
     atualizarC();
 </script>
 </body>
