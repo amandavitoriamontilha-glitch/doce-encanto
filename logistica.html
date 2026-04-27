@@ -31,6 +31,7 @@
         .card-membro p { margin: 0; font-size: 11px; color: #666; font-weight: bold; text-transform: uppercase; }
 
         .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-principal:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -58,6 +59,9 @@
         <hr>
         <h3 id="total-carrinho">Total: R$ 0,00</h3>
         <button class="btn-principal" style="background:#25d366" onclick="fluxoFinalizar()">Finalizar Pedido</button>
+        <p style="font-size: 10px; color: #666; text-align: center; margin-top: 10px;">
+            *Escolha buscar na Sala 9D ou combinar a entrega.
+        </p>
     </div>
 </div>
 
@@ -118,55 +122,43 @@
     }
 
     async function fluxoFinalizar() {
-        if(carrinho.length === 0) {
-            alert("O carrinho está vazio!");
-            return;
-        }
-
-        // Validação do NOME (Apenas letras)
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        
+        // VALIDAÇÃO DE NOME (Apenas letras)
         let nomeCli = "";
         const apenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
-
         while (true) {
-            nomeCli = prompt("Digite seu NOME (Obrigatório - Apenas letras):");
+            nomeCli = prompt("Digite seu nome (Apenas letras):");
             if (nomeCli === null) return;
             nomeCli = nomeCli.trim();
-
-            if (nomeCli === "") {
-                alert("O nome é obrigatório!");
-            } else if (!apenasLetras.test(nomeCli)) {
-                alert("Por favor, digite apenas letras no nome.");
-            } else {
-                break;
-            }
+            if (nomeCli === "") alert("O nome é obrigatório!");
+            else if (!apenasLetras.test(nomeCli)) alert("Por favor, use apenas letras!");
+            else break;
         }
 
-        // Validação do LOCAL
-        let localFinal = "";
-        let opcao = prompt("COMO DESEJA RECEBER?\n1: BUSCAR NA SALA 9D\n2: COMBINAR ENTREGA");
-        
+        // ESCOLHA DE LOCAL
+        const opcao = prompt("Como deseja receber seu pedido?\n1: BUSCAR NA SALA 9D\n2: COMBINAR ENTREGA");
         if (opcao === null) return;
-
+        
+        let localFinal = "";
         if (opcao === "1") {
             localFinal = "Sala 9D";
         } else if (opcao === "2") {
-            localFinal = "A combinar via WhatsApp";
+            localFinal = "A combinar";
         } else {
-            alert("Opção inválida! Escolha 1 ou 2.");
-            return;
+            return alert("Opção inválida! Escolha 1 ou 2.");
         }
 
         const pedidoID = gerarID();
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
-        const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
+        const itensFormatados = carrinho.map(i => i.nome).join(" + ");
 
         try {
-            // Bloqueia o botão para evitar múltiplos envios
-            const btn = document.querySelector(".gaveta-dir .btn-principal");
+            const btn = document.querySelector("#idCarrinho .btn-principal");
             btn.disabled = true;
-            btn.innerText = "Enviando...";
+            btn.innerText = "Registrando...";
 
-            const response = await fetch(`${urlAPI}?sheet=pedidos`, {
+            await fetch(`${urlAPI}?sheet=pedidos`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data: [{
@@ -174,32 +166,26 @@
                     "id_pedido": pedidoID,
                     "cliente": nomeCli,
                     "local": localFinal,
-                    "itens": itensConcatenados,
+                    "itens": itensFormatados,
                     "valor": totalStr,
                     "data_compra": new Date().toLocaleString('pt-BR')
                 }]})
             });
 
-            if(response.ok) {
-                alert("✅ Pedido Registrado!\nID: " + pedidoID);
-                let link = `https://wa.me/${WHATSAPP}?text=*PEDIDO GESTÃO*%0A*ID:* ${pedidoID}%0A*Nome:* ${nomeCli}%0A*Itens:* ${itensConcatenados}%0A*Total:* R$ ${totalStr}%0A*Entrega:* ${localFinal}`;
-                window.location.href = link;
-                
-                carrinho = []; 
-                localStorage.removeItem('carrinhoDoceEncanto'); 
-                atualizarC();
-                toggleG('idCarrinho', '0');
-            } else {
-                alert("Erro ao salvar pedido. Tente novamente.");
-            }
+            alert("✅ Pedido Registrado com Sucesso!");
+            const linkWhats = `https://wa.me/${WHATSAPP}?text=*NOVO PEDIDO (GESTÃO)*%0A*ID:* ${pedidoID}%0A*Cliente:* ${nomeCli}%0A*Itens:* ${itensFormatados}%0A*Local:* ${localFinal}%0A*Total:* R$ ${totalStr}`;
+            window.location.href = linkWhats;
+            
+            carrinho = []; 
+            localStorage.removeItem('carrinhoDoceEncanto'); 
+            atualizarC(); 
+            toggleG('idCarrinho', '0');
         } catch (e) { 
-            alert("Erro de conexão."); 
+            alert("Erro ao processar pedido. Verifique sua conexão."); 
         } finally {
-            const btn = document.querySelector(".gaveta-dir .btn-principal");
-            if(btn) {
-                btn.disabled = false;
-                btn.innerText = "Finalizar Pedido";
-            }
+            const btn = document.querySelector("#idCarrinho .btn-principal");
+            btn.disabled = false;
+            btn.innerText = "Finalizar Pedido";
         }
     }
 
