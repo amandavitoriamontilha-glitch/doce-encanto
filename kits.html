@@ -84,10 +84,8 @@
 
     function tratarCaminhoImagem(valor) {
         if (!valor || valor === "" || valor === "default.jpg") return "https://via.placeholder.com/300x200?text=Doce+Encanto";
-        let v = valor.trim();
-        if (v.toLowerCase().startsWith('http')) {
-            return v; 
-        }
+        let v = valor.toString().trim();
+        if (v.toLowerCase().startsWith('http')) return v; 
         return "imagens/" + v; 
     }
 
@@ -96,24 +94,37 @@
         try {
             const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=Kits`);
             const dados = await resposta.json();
+            
+            if(!dados || dados.length === 0) {
+                vitrine.innerHTML = "Nenhum kit encontrado.";
+                return;
+            }
+
             vitrine.innerHTML = '';
             dados.forEach(item => {
                 const nome = item.Kits || item.kits || item.Nome || item.A;
                 const preco = item.Preco || item.preco || item.B || "0.00";
-                const desc = item.Descricao || item.C || "";
+                const desc = item.Descricao || item.descricao || item.C || "Sem descrição disponível.";
                 const rawImg = item.Imagen || item.Imagem || item.D || "";
                 const urlImagem = tratarCaminhoImagem(rawImg);
+
                 if (!nome || nome === "Kits") return;
-                vitrine.innerHTML += `
-                    <div class="card">
-                        <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Doce+Encanto'">
-                        <h3>${nome}</h3>
-                        <p style="font-weight:bold; color:var(--primaria)">R$ ${preco}</p>
-                        <button class="btn-principal" onclick="abrirModal('${nome}', '${preco}', '${desc}', '${urlImagem}')">Ver Detalhes</button>
-                    </div>`;
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Doce+Encanto'">
+                    <h3>${nome}</h3>
+                    <p style="font-weight:bold; color:var(--primaria)">R$ ${preco}</p>
+                    <button class="btn-principal" onclick="abrirModal('${nome.replace(/'/g, "\\'")}', '${preco}', '${desc.replace(/'/g, "\\'")}', '${urlImagem}')">Ver Detalhes</button>
+                `;
+                vitrine.appendChild(card);
             });
             atualizarIcone();
-        } catch (erro) { vitrine.innerHTML = "Erro ao carregar os dados."; }
+        } catch (erro) { 
+            console.error(erro);
+            vitrine.innerHTML = "Erro ao carregar os dados. Verifique a API."; 
+        }
     }
 
     function abrirModal(n, p, d, urlFinal) {
@@ -122,9 +133,13 @@
         document.getElementById('m-desc').innerText = d;
         document.getElementById('m-img').src = urlFinal;
         document.getElementById('modalKit').style.display = 'flex';
+        
         document.getElementById('btn-confirmar').onclick = function() {
             carrinho.push({ nome: n, preco: p });
-            salvar(); atualizarIcone(); fecharM(); toggleG('gavCart', '320px');
+            salvar(); 
+            atualizarIcone(); 
+            fecharM(); 
+            toggleG('gavCart', '320px');
         };
     }
 
@@ -164,7 +179,6 @@
         const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
 
         try {
-            // ENVIO PARA O EXCEL (ABA PEDIDOS)
             const response = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -180,24 +194,18 @@
             });
 
             if(response.ok) {
-                alert("✅ Pedido Registrado na Planilha! ID: " + pedidoID);
-                // REDIRECIONAMENTO WHATSAPP
+                alert("✅ Pedido Registrado! ID: " + pedidoID);
                 const msg = `Pedido Kit: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}%0ATotal: R$ ${totalStr}`;
                 window.location.href = `https://wa.me/${WHATSAPP}?text=${msg}`;
-                
-                carrinho = []; 
-                salvar(); 
-                atualizarIcone(); 
-                toggleG('gavCart', '0');
+                carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
             } else {
-                alert("Erro ao salvar na planilha. Verifique a conexão.");
+                alert("Erro ao salvar na planilha.");
             }
-        } catch (e) { 
-            alert("Erro ao processar pedido."); 
-        }
+        } catch (e) { alert("Erro ao processar pedido."); }
     }
 
-    carregar();
+    // Inicializa a carga dos dados
+    window.onload = carregar;
 </script>
 </body>
 </html>
