@@ -15,7 +15,7 @@
         .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
         .vitrine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; background: #eee; }
+        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; background: #f0f0f0; }
         .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         .gaveta-dir { right: 0; } .gaveta-esq { left: 0; }
@@ -74,7 +74,7 @@
 
 <script>
     let carrinho = JSON.parse(localStorage.getItem('carrinhoDoceEncanto')) || [];
-    const apiID = "ti9a03weq125d";
+    const apiID = "ti9a03weq125d"; 
     const WHATSAPP = "5544998392373"; 
 
     function toggleG(id, tam) { document.getElementById(id).style.width = tam; }
@@ -87,45 +87,39 @@
         return txt.toString().replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/[\n\r]/g, ' ');
     }
 
-    // FUNÇÃO ATUALIZADA: ACEITA QUALQUER LINK, GIF, ETC.
     function tratarCaminhoImagem(valor) {
         if (!valor || valor.trim() === "") return "https://via.placeholder.com/300x200?text=Sem+Imagem";
-        
         let v = valor.toString().trim();
-        
-        // Verifica se é um link completo (http/https) OU se contém extensões de web (gif, png, webp, etc)
-        const regexWeb = /^(http|https|data:image|\/\/)/i;
-        const regexExtensao = /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i;
-
-        if (regexWeb.test(v) || regexExtensao.test(v)) {
-            // Se não começar com http mas tiver extensão de imagem, e não for local, 
-            // assumimos que é um link externo ou caminho relativo que você quer manter.
+        // Se for link da internet (http), base64 ou link relativo com extensão de imagem
+        if (/^(http|https|data:image|\/\/)/i.test(v) || /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(v)) {
             return v; 
         }
-        
-        // Se for só o nome do arquivo sem nada, tenta a pasta local
         return "imagens/" + v; 
     }
 
     async function carregar() {
         const vitrine = document.getElementById('vitrine');
         try {
-            const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=Kits`);
+            // Note que aqui o nome da aba 'kits' está em minúsculo
+            const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=kits`);
             const dados = await resposta.json();
             
+            console.log("Dados carregados:", dados); // Para você ver no console se os dados chegaram
+
             if(!dados || dados.length === 0 || dados.error) {
-                vitrine.innerHTML = "Nenhum kit encontrado ou erro na planilha.";
+                vitrine.innerHTML = "Verifique se o nome da aba na planilha é 'kits' (em minúsculo).";
                 return;
             }
 
             vitrine.innerHTML = '';
             dados.forEach(item => {
-                const nomeRaw = item.Kits || item.kits || item.Nome || item.A;
-                const precoRaw = item.Preco || item.preco || item.B || "0.00";
-                const descRaw = item.Descricao || item.descricao || item.C || "Delicioso kit de doces!";
-                const imgRaw = item.Imagen || item.Imagem || item.D || "";
+                // USANDO NOMES EM MINÚSCULO CONFORME VOCÊ DISSE
+                const nomeRaw = item.kits || item.nome;
+                const precoRaw = item.preco || "0,00";
+                const descRaw = item.descricao || "Combo especial Doce Encanto";
+                const imgRaw = item.imagem || "";
 
-                if (!nomeRaw || nomeRaw === "Kits") return;
+                if (!nomeRaw || nomeRaw.toLowerCase() === "kits") return;
 
                 const urlImagem = tratarCaminhoImagem(imgRaw);
                 const nomeLimpo = limparTexto(nomeRaw);
@@ -143,7 +137,8 @@
             });
             atualizarIcone();
         } catch (erro) { 
-            vitrine.innerHTML = "Erro ao carregar dados."; 
+            console.error(erro);
+            vitrine.innerHTML = "Erro ao conectar com a planilha. Verifique a internet ou o ID da API."; 
         }
     }
 
@@ -187,9 +182,9 @@
     function remover(i) { carrinho.splice(i, 1); salvar(); atualizarIcone(); }
 
     async function fluxoFinalizar() {
-        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        if(carrinho.length === 0) return alert("Adicione itens ao carrinho!");
         const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
-        const localCli = prompt("Local de Entrega (Sala/Bloco):") || "Não informado";
+        const localCli = prompt("Onde entregar? (Bloco/Sala):") || "Não informado";
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
         const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
         const pedidoID = gerarID();
@@ -205,11 +200,11 @@
                 }]})
             });
             if(response.ok) {
-                alert("Pedido Enviado!");
+                alert("Pedido Enviado com Sucesso!");
                 window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}`;
                 carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
             }
-        } catch (e) { alert("Erro ao enviar pedido."); }
+        } catch (e) { alert("Erro ao enviar. Tente novamente."); }
     }
 
     window.onload = carregar;
