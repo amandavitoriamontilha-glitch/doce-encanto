@@ -82,6 +82,15 @@
     function salvar() { localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho)); }
     function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
 
+    // Limpa textos para não quebrar o HTML do botão
+    function limparTexto(txt) {
+        if (!txt) return "";
+        return txt.toString()
+                  .replace(/'/g, "\\'") // Escapa aspas simples
+                  .replace(/"/g, '&quot;') // Escapa aspas duplas
+                  .replace(/[\n\r]/g, ' '); // Remove quebras de linha
+    }
+
     function tratarCaminhoImagem(valor) {
         if (!valor || valor === "" || valor === "default.jpg") return "https://via.placeholder.com/300x200?text=Doce+Encanto";
         let v = valor.toString().trim();
@@ -95,51 +104,53 @@
             const resposta = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=Kits`);
             const dados = await resposta.json();
             
-            if(!dados || dados.length === 0) {
-                vitrine.innerHTML = "Nenhum kit encontrado.";
+            if(!dados || dados.length === 0 || dados.error) {
+                vitrine.innerHTML = "Nenhum kit encontrado ou erro na planilha.";
                 return;
             }
 
             vitrine.innerHTML = '';
             dados.forEach(item => {
-                const nome = item.Kits || item.kits || item.Nome || item.A;
-                const preco = item.Preco || item.preco || item.B || "0.00";
-                const desc = item.Descricao || item.descricao || item.C || "Sem descrição disponível.";
-                const rawImg = item.Imagen || item.Imagem || item.D || "";
-                const urlImagem = tratarCaminhoImagem(rawImg);
+                const nomeRaw = item.Kits || item.kits || item.Nome || item.A;
+                const precoRaw = item.Preco || item.preco || item.B || "0.00";
+                const descRaw = item.Descricao || item.descricao || item.C || "Delicioso kit de doces!";
+                const imgRaw = item.Imagen || item.Imagem || item.D || "";
 
-                if (!nome || nome === "Kits") return;
+                if (!nomeRaw || nomeRaw === "Kits") return;
+
+                const urlImagem = tratarCaminhoImagem(imgRaw);
+                
+                // Limpeza para segurança do clique
+                const nomeLimpo = limparTexto(nomeRaw);
+                const descLimpa = limparTexto(descRaw);
 
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
                     <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Doce+Encanto'">
-                    <h3>${nome}</h3>
-                    <p style="font-weight:bold; color:var(--primaria)">R$ ${preco}</p>
-                    <button class="btn-principal" onclick="abrirModal('${nome.replace(/'/g, "\\'")}', '${preco}', '${desc.replace(/'/g, "\\'")}', '${urlImagem}')">Ver Detalhes</button>
+                    <h3>${nomeRaw}</h3>
+                    <p style="font-weight:bold; color:var(--primaria)">R$ ${precoRaw}</p>
+                    <button class="btn-principal" onclick="abrirModal('${nomeLimpo}', '${precoRaw}', '${descLimpa}', '${urlImagem}')">Ver Detalhes</button>
                 `;
                 vitrine.appendChild(card);
             });
             atualizarIcone();
         } catch (erro) { 
             console.error(erro);
-            vitrine.innerHTML = "Erro ao carregar os dados. Verifique a API."; 
+            vitrine.innerHTML = "Erro de conexão com a planilha."; 
         }
     }
 
-    function abrirModal(n, p, d, urlFinal) {
-        document.getElementById('m-nome').innerText = n;
+    function abrirModal(n, p, d, img) {
+        document.getElementById('m-nome').innerText = n.replace(/\\'/g, "'");
         document.getElementById('m-preco').innerText = "R$ " + p;
-        document.getElementById('m-desc').innerText = d;
-        document.getElementById('m-img').src = urlFinal;
+        document.getElementById('m-desc').innerText = d.replace(/\\'/g, "'");
+        document.getElementById('m-img').src = img;
         document.getElementById('modalKit').style.display = 'flex';
         
         document.getElementById('btn-confirmar').onclick = function() {
-            carrinho.push({ nome: n, preco: p });
-            salvar(); 
-            atualizarIcone(); 
-            fecharM(); 
-            toggleG('gavCart', '320px');
+            carrinho.push({ nome: n.replace(/\\'/g, "'"), preco: p });
+            salvar(); atualizarIcone(); fecharM(); toggleG('gavCart', '320px');
         };
     }
 
@@ -198,13 +209,10 @@
                 const msg = `Pedido Kit: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}%0ATotal: R$ ${totalStr}`;
                 window.location.href = `https://wa.me/${WHATSAPP}?text=${msg}`;
                 carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
-            } else {
-                alert("Erro ao salvar na planilha.");
             }
         } catch (e) { alert("Erro ao processar pedido."); }
     }
 
-    // Inicializa a carga dos dados
     window.onload = carregar;
 </script>
 </body>
