@@ -15,7 +15,7 @@
         .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
         .vitrine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; background: #eee; }
         .btn-principal { background: var(--primaria); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .gaveta { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; background: white; overflow-x: hidden; transition: 0.4s; box-shadow: 0 0 15px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         .gaveta-dir { right: 0; } .gaveta-esq { left: 0; }
@@ -63,7 +63,7 @@
 
 <div id="modalKit" class="modal">
     <div class="modal-content">
-        <img id="m-img" style="width:100%; border-radius:10px;">
+        <img id="m-img" style="width:100%; height:200px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
         <h2 id="m-nome"></h2>
         <p id="m-desc"></p>
         <h3 id="m-preco" style="color:var(--primaria)"></h3>
@@ -82,19 +82,28 @@
     function salvar() { localStorage.setItem('carrinhoDoceEncanto', JSON.stringify(carrinho)); }
     function gerarID() { return "DE-" + Math.floor(1000 + Math.random() * 9000); }
 
-    // Limpa textos para não quebrar o HTML do botão
     function limparTexto(txt) {
         if (!txt) return "";
-        return txt.toString()
-                  .replace(/'/g, "\\'") // Escapa aspas simples
-                  .replace(/"/g, '&quot;') // Escapa aspas duplas
-                  .replace(/[\n\r]/g, ' '); // Remove quebras de linha
+        return txt.toString().replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/[\n\r]/g, ' ');
     }
 
+    // FUNÇÃO ATUALIZADA: ACEITA QUALQUER LINK, GIF, ETC.
     function tratarCaminhoImagem(valor) {
-        if (!valor || valor === "" || valor === "default.jpg") return "https://via.placeholder.com/300x200?text=Doce+Encanto";
+        if (!valor || valor.trim() === "") return "https://via.placeholder.com/300x200?text=Sem+Imagem";
+        
         let v = valor.toString().trim();
-        if (v.toLowerCase().startsWith('http')) return v; 
+        
+        // Verifica se é um link completo (http/https) OU se contém extensões de web (gif, png, webp, etc)
+        const regexWeb = /^(http|https|data:image|\/\/)/i;
+        const regexExtensao = /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i;
+
+        if (regexWeb.test(v) || regexExtensao.test(v)) {
+            // Se não começar com http mas tiver extensão de imagem, e não for local, 
+            // assumimos que é um link externo ou caminho relativo que você quer manter.
+            return v; 
+        }
+        
+        // Se for só o nome do arquivo sem nada, tenta a pasta local
         return "imagens/" + v; 
     }
 
@@ -119,15 +128,13 @@
                 if (!nomeRaw || nomeRaw === "Kits") return;
 
                 const urlImagem = tratarCaminhoImagem(imgRaw);
-                
-                // Limpeza para segurança do clique
                 const nomeLimpo = limparTexto(nomeRaw);
                 const descLimpa = limparTexto(descRaw);
 
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Doce+Encanto'">
+                    <img src="${urlImagem}" onerror="this.src='https://via.placeholder.com/300x200?text=Erro+na+Imagem'">
                     <h3>${nomeRaw}</h3>
                     <p style="font-weight:bold; color:var(--primaria)">R$ ${precoRaw}</p>
                     <button class="btn-principal" onclick="abrirModal('${nomeLimpo}', '${precoRaw}', '${descLimpa}', '${urlImagem}')">Ver Detalhes</button>
@@ -136,8 +143,7 @@
             });
             atualizarIcone();
         } catch (erro) { 
-            console.error(erro);
-            vitrine.innerHTML = "Erro de conexão com a planilha."; 
+            vitrine.innerHTML = "Erro ao carregar dados."; 
         }
     }
 
@@ -169,8 +175,7 @@
             carrinho.forEach((item, index) => {
                 let pLimpo = parseFloat(item.preco.toString().replace('R$', '').replace(',', '.').trim());
                 soma += isNaN(pLimpo) ? 0 : pLimpo;
-                lista.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                lista.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
                         <div style="text-align:left"><span>${item.nome}</span><br><small>R$ ${item.preco}</small></div>
                         <i class="fas fa-trash" onclick="remover(${index})" style="color:red; cursor:pointer;"></i>
                     </div>`;
@@ -185,32 +190,26 @@
         if(carrinho.length === 0) return alert("Carrinho vazio!");
         const nomeCli = prompt("Seu nome:"); if(!nomeCli) return;
         const localCli = prompt("Local de Entrega (Sala/Bloco):") || "Não informado";
-        const pedidoID = gerarID();
         const totalStr = document.getElementById('total-carrinho').innerText.replace('Total: R$ ', '');
         const itensConcatenados = carrinho.map(i => i.nome).join(" + ");
+        const pedidoID = gerarID();
 
         try {
             const response = await fetch(`https://sheetdb.io/api/v1/${apiID}?sheet=pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ data: [{
-                    "status": "Pendente", 
-                    "id_pedido": pedidoID, 
-                    "cliente": nomeCli,
-                    "local": localCli,
-                    "itens": itensConcatenados, 
-                    "valor": totalStr,
+                    "status": "Pendente", "id_pedido": pedidoID, "cliente": nomeCli,
+                    "local": localCli, "itens": itensConcatenados, "valor": totalStr,
                     "data_compra": new Date().toLocaleString('pt-BR')
                 }]})
             });
-
             if(response.ok) {
-                alert("✅ Pedido Registrado! ID: " + pedidoID);
-                const msg = `Pedido Kit: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}%0ATotal: R$ ${totalStr}`;
-                window.location.href = `https://wa.me/${WHATSAPP}?text=${msg}`;
+                alert("Pedido Enviado!");
+                window.location.href = `https://wa.me/${WHATSAPP}?text=Pedido: ${pedidoID}%0ANome: ${nomeCli}%0AItens: ${itensConcatenados}`;
                 carrinho = []; salvar(); atualizarIcone(); toggleG('gavCart', '0');
             }
-        } catch (e) { alert("Erro ao processar pedido."); }
+        } catch (e) { alert("Erro ao enviar pedido."); }
     }
 
     window.onload = carregar;
